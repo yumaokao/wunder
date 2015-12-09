@@ -1,0 +1,24 @@
+session_name: wunder
+start_directory: ./ # load session relative to config location (project root).
+
+windows:
+- window_name: gits
+  focus: true
+  panes:
+  - blank
+
+- window_name: wunder
+  panes:
+  - blank
+
+- window_name: run
+  panes:
+  - blank
+
+- window_name: npm
+  panes:
+  - blank
+
+- window_name: rivs
+  panes:
+  - vim readme.rst

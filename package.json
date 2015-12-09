@@ -9,6 +9,7 @@
   "author": "yumaokao",
   "license": "ISC",
   "dependencies": {
-    "commander": "^2.9.0"
+    "commander": "^2.9.0",
+    "wunderlist": "^0.1.2"
   }
 }
