@@ -26,7 +26,8 @@ Build Up
   code:: sh
 
   $ npm install --save commmander
-  $ npm install --save wunderlist
+  # $ npm install --save wunderlist
+  $ npm install --save restler
 
 
 Debug
