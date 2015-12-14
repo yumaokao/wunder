@@ -7,7 +7,8 @@ var WunderRoot = require('./libs/WunderRoot');
 var pkg = require('./package');
 
 program
-  .version(pkg.version);
+  .version(pkg.version)
+  .option('-c, --conf <dir>', 'Specific another configuration directory');
 
 program
   .command('list')
@@ -16,13 +17,13 @@ program
   .option('-l, --lists <list>', 'Which list to show')
   .action(function(option) {
     var lists = option.lists || 'all';
-    console.log("YMK in command list, lists " + lists);
+    // console.log('YMK in command list, options ' + program.conf);
+    // console.log('YMK in command list, lists ' + lists);
+    var root = new WunderRoot();
+    // root.fetch();
   });
 
 program
   .parse(process.argv);
-
-var root = new WunderRoot();
-root.help();
 
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai
