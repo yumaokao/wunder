@@ -11,6 +11,7 @@ Introduction
 Wanted
 ------
 * Wanted features
+  + interactive interface
   + ncurses interface
 
 
@@ -20,7 +21,7 @@ Build Up
   code:: sh
 
   $ npm init
-  $ node index.js
+  $ node wunder.js
 
 * npm install
   code:: sh
@@ -30,6 +31,8 @@ Build Up
   $ npm install --save restler
   $ npm install --save blessed
 
+  $ npm install
+
 
 Debug
 -----
@@ -37,12 +40,12 @@ Debug
   code:: sh
 
   $ sudo npm install -g node-inspector
-  $ node-debug index.js
+  $ node-debug wunder.js
 
 
 Todo
 ----
-* [ ] 2015-11-09 liblinear check one-vs-rest
+* [ ] 2015-12-14 WunderList model class libraries
 
 
 Reference
@@ -51,5 +54,7 @@ Reference
 .. _WunderLine: http://www.wunderline.rocks/
 .. _CommandLineNodeJs: https://developer.atlassian.com/blog/2015/11/scripting-with-node/
 .. _DebugNodeJs: http://spin.atomicobject.com/2015/09/25/debug-node-js/
+.. _NodeStyleGuide:  https://github.com/felixge/node-style-guide
+.. _NodeModulePatterns: https://darrenderidder.github.io/talks/ModulePatterns
 
 .. vim:fileencoding=UTF-8:ts=4:sw=4:sta:et:sts=4:ai

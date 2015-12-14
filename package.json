@@ -2,7 +2,10 @@
   "name": "wunder",
   "version": "0.0.1",
   "description": "wunder is a command line interface of WunderList",
-  "main": "index.js",
+  "bin": {
+    "wunder": "wunder.js"
+  },
+  "main": "wunder.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
