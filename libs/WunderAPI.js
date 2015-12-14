@@ -1,7 +1,7 @@
 'use strict';
 
-var url = require('url');
 var rest = require('restler');
+var Promise = require('bluebird');
 
 var WunderAPI = function() {
   this.token = '93b7a581f3204d31128bb816f459a4842cceb460976e728f155c1b2ca63a';
@@ -12,17 +12,19 @@ var WunderAPI = function() {
                               'X-Client-ID': this.client } };
 };
 
-WunderAPI.prototype.get = function(aurl, callbacks) {
-  // var wurl = url.resolve(this.baseURL, aurl);
+WunderAPI.prototype.get = function(aurl) {
   var wurl = this.baseURL + aurl;
-  // console.log('API get url ' + wurl);
+  var self = this;
 
-  rest.get(wurl, this.options).on('complete', function(data, resp) { 
-    console.log("url response " + resp.statusCode);
-    if (resp.statusCode == 200) {
-      console.log("data.length " + data.length);
-      data.forEach(function(elem, index, array) { console.log(elem); });
-    }
+  return new Promise(function(resolve, reject) {
+    rest.get(wurl, self.options).on('complete', function(data, resp) {
+      // console.log("url response " + resp.statusCode);
+      if (resp.statusCode == 200) {
+        resolve(data);
+      } else {
+        reject(resp);
+      }
+    });
   });
 }
 
