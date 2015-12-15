@@ -22,7 +22,7 @@ program
     var root = new WunderRoot();
     root.fetch().then(function(r) {
       console.log(r.root);
-      r.lists.forEach(function(elem, index, array) { console.log(elem); });
+      // r.lists.forEach(function(elem, index, array) { console.log(elem); });
     });
   });
 
