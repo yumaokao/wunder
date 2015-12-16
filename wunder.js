@@ -21,7 +21,12 @@ program
     // console.log('YMK in command list, lists ' + lists);
     var root = new WunderRoot();
     root.lists().then(function(lists) {
-      lists.forEach(function(elem, index, array) { console.log(elem); });
+      lists.forEach(function(list) {
+        list.tasks().then(function(tasks) {
+          console.log(list.list.title);
+          tasks.forEach(function(task) { console.log("    " + task.title); });
+        }); 
+      });
     });
   });
 

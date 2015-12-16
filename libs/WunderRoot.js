@@ -3,15 +3,16 @@
 var util = require('util');
 var Promise = require('bluebird');
 var WunderAPI = require('./WunderAPI');
+var WunderList = require('./WunderList');
 
 var WunderRoot = function() {
   WunderAPI.call(this)
 
-  this.cachedLists = [];
-  this.cachedRoot = null;
+  this.root = null;
+  this.wunderLists = [];
 
   var self = this;
-  this.get('/root').then(function(data) { self.catchedRoot = data; });
+  this.get('/root').then(function(data) { self.root = data; });
 };
 
 WunderRoot.prototype.lists = function() {
@@ -19,8 +20,10 @@ WunderRoot.prototype.lists = function() {
   return new Promise(function(resolve, reject) {
     self.get('/lists')
       .then(function(data) {
-        self.cachedLists = data;
-        resolve(self.cachedLists);
+        self.wunderLists = data.map(function(l) {
+          return new WunderList(l, self); 
+        });
+        resolve(self.wunderLists);
       })
       .catch(function(resp) {
         reject(resp);
