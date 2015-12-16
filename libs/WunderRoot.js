@@ -7,29 +7,26 @@ var WunderAPI = require('./WunderAPI');
 var WunderRoot = function() {
   WunderAPI.call(this)
 
-  this.lists = [];
-  this.root = null;
+  this.cachedLists = [];
+  this.cachedRoot = null;
+
+  var self = this;
+  this.get('/root').then(function(data) { self.catchedRoot = data; });
 };
 
-WunderRoot.prototype.fetch = function() {
+WunderRoot.prototype.lists = function() {
   var self = this;
-
   return new Promise(function(resolve, reject) {
-    self.get('/root')
+    self.get('/lists')
       .then(function(data) {
-        self.root = data;
-        return self.get('/lists');
-      })
-      .then(function(data) {
-        self.lists = data;
-        // self.lists.forEach(function(elem, index, array) { console.log(elem); });
-        resolve(self);
+        self.cachedLists = data;
+        resolve(self.cachedLists);
       })
       .catch(function(resp) {
         reject(resp);
       });
   });
-}
+};
 
 util.inherits(WunderRoot, WunderAPI);
 module.exports = WunderRoot;

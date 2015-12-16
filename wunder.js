@@ -20,9 +20,8 @@ program
     // console.log('YMK in command list, options ' + program.conf);
     // console.log('YMK in command list, lists ' + lists);
     var root = new WunderRoot();
-    root.fetch().then(function(r) {
-      console.log(r.root);
-      // r.lists.forEach(function(elem, index, array) { console.log(elem); });
+    root.lists().then(function(lists) {
+      lists.forEach(function(elem, index, array) { console.log(elem); });
     });
   });
 
