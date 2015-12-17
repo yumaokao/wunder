@@ -8,11 +8,11 @@ var WunderList = require('./WunderList');
 var WunderRoot = function() {
   WunderAPI.call(this)
 
-  this.root = null;
+  this.obj = null;
   this.wunderLists = [];
 
   var self = this;
-  this.get('/root').then(function(data) { self.root = data; });
+  this.get('/root').then(function(data) { self.obj = data; });
 };
 
 WunderRoot.prototype.lists = function() {

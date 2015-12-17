@@ -23,8 +23,8 @@ program
     root.lists().then(function(lists) {
       lists.forEach(function(list) {
         list.tasks().then(function(tasks) {
-          console.log(list.list.title);
-          tasks.forEach(function(task) { console.log("    " + task.title); });
+          console.log(list.obj.title);
+          tasks.forEach(function(task) { console.log("    " + task.obj.title); });
         }); 
       });
     });
