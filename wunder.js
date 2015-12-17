@@ -25,15 +25,13 @@ program
     root.lists().then(function(lists) {
       lists.forEach(function(list) {
         list.tasks().then(function(tasks) {
-          // console.log(list.obj.title);
-          // tasks.forEach(function(task) { console.log("    " + task.obj.title); });
           Promise.all(tasks.map(function(t) { return t.notes(); }))
             .then(function() {
               console.log(list.obj.title)
               list.wunderTasks.forEach(function(t) {
-                console.log("    " + t.obj.title);
+                console.log('    ' + t.obj.title);
                 t.wunderNotes.forEach(function(n) {
-                  console.log("        " + n.content);
+                  console.log('        [' + n.content + ']');
                 });
               });
             });
