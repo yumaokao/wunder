@@ -31,7 +31,7 @@ program
               list.wunderTasks.forEach(function(t) {
                 console.log('    ' + t.obj.title);
                 t.wunderNotes.forEach(function(n) {
-                  console.log('        [' + n.content + ']');
+                  console.log('        [' + n.obj.content + ']');
                 });
               });
             });

@@ -6,7 +6,7 @@ var WunderAPI = require('./WunderAPI');
 var WunderComment = function(obj, up) {
   WunderAPI.call(this)
 
-  this.obj = task;
+  this.obj = obj;
   this.up = up;
 };
 

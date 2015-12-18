@@ -6,7 +6,7 @@ var WunderAPI = require('./WunderAPI');
 var WunderNote = function(obj, up) {
   WunderAPI.call(this)
 
-  this.obj = task;
+  this.obj = obj;
   this.up = up;
 };
 
