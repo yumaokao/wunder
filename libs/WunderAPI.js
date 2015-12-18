@@ -12,13 +12,13 @@ var WunderAPI = function() {
                               'X-Client-ID': this.client } };
 };
 
-WunderAPI.prototype.fetchAs = function(aurl, target) {
+WunderAPI.prototype.fetchAs = function(aurl, target, newer) {
   var self = this;
 
   return new Promise(function(resolve, reject) {
     self.get(aurl)
       .then(function(data) {
-        self[target] = data.map(function(d) { return new self.newers[target](d, self); });
+        self[target] = data.map(function(d) { return new newer(d, self); });
         resolve(self[target]);
       })
       .catch(function(resp) { reject(resp); });

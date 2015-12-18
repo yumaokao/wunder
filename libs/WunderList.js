@@ -16,14 +16,11 @@ var WunderList = function(obj, up) {
   // this.wunderComments = [];
   // this.wunderNotes = [];
   // this.wunderReminders = [];
-
-  this.newers = {
-    'wunderTasks': require('./WunderTask')
-  };
 };
 
 WunderList.prototype.tasks = function() {
-  return this.fetchAs('/tasks?list_id=' + this.obj.id, 'wunderTasks');
+  return this.fetchAs('/tasks?list_id=' + this.obj.id,
+                      'wunderTasks', WunderTask);
 };
 
 util.inherits(WunderList, WunderAPI);
