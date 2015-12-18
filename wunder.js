@@ -30,6 +30,9 @@ program
               return Promise.all(tasks.map(function(t) { return t.subtasks(); }));
             })
             .then(function() {
+              return Promise.all(tasks.map(function(t) { return t.comments(); }));
+            })
+            .then(function() {
               console.log(list.obj.title)
               list.wunderTasks.forEach(function(t) {
                 console.log('    ' + t.obj.title);
@@ -38,6 +41,9 @@ program
                 });
                 t.wunderSubtasks.forEach(function(n) {
                   console.log('        Subtask: [' + n.obj.title + ']');
+                });
+                t.wunderComments.forEach(function(n) {
+                  console.log('        Comment: [' + n.obj.text + ']');
                 });
               });
             });
