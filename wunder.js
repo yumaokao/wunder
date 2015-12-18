@@ -34,18 +34,18 @@ program
               return Promise.all(tasks.map(function(t) { return t.comments(); }));
             })
             .then(function() {
-              console.log(chalk.blue(list.obj.title));
+              console.log(chalk.bold.blue(list.obj.title + ' (' + list.wunderTasks.length + ')'));
               list.wunderTasks.forEach(function(t) {
                 // console.log('    ' + t.obj.title);
-                console.log('    ' + chalk.green(t.obj.title));
+                console.log('  ' + chalk.green(t.obj.title));
                 t.wunderNotes.forEach(function(n) {
-                  console.log('        Note: [' + n.obj.content.replace(/\n/g, ' ') + ']');
+                  console.log('    Note: [' + n.obj.content.replace(/\n/g, ' ') + ']');
                 });
                 t.wunderSubtasks.forEach(function(n) {
-                  console.log('        Subtask: [' + n.obj.title + ']');
+                  console.log('    Subtask: [' + n.obj.title + ']');
                 });
                 t.wunderComments.forEach(function(n) {
-                  console.log('        Comment: [' + n.obj.text + ']');
+                  console.log('    Comment: [' + n.obj.text + ']');
                 });
               });
             });
