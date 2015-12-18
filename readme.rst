@@ -30,6 +30,8 @@ Build Up
   # $ npm install --save wunderlist
   $ npm install --save restler
   $ npm install --save blessed
+  $ npm install --save bluebird
+  $ npm install --save chalk
 
   $ npm install
 

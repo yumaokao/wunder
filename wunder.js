@@ -7,6 +7,7 @@ var WunderRoot = require('./libs/WunderRoot');
 var pkg = require('./package');
 
 var Promise = require('bluebird');
+var chalk = require('chalk');
 
 program
   .version(pkg.version)
@@ -33,9 +34,10 @@ program
               return Promise.all(tasks.map(function(t) { return t.comments(); }));
             })
             .then(function() {
-              console.log(list.obj.title)
+              console.log(chalk.blue(list.obj.title));
               list.wunderTasks.forEach(function(t) {
-                console.log('    ' + t.obj.title);
+                // console.log('    ' + t.obj.title);
+                console.log('    ' + chalk.green(t.obj.title));
                 t.wunderNotes.forEach(function(n) {
                   console.log('        Note: [' + n.obj.content.replace(/\n/g, ' ') + ']');
                 });
