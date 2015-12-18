@@ -27,11 +27,17 @@ program
         list.tasks().then(function(tasks) {
           Promise.all(tasks.map(function(t) { return t.notes(); }))
             .then(function() {
+              return Promise.all(tasks.map(function(t) { return t.subtasks(); }));
+            })
+            .then(function() {
               console.log(list.obj.title)
               list.wunderTasks.forEach(function(t) {
                 console.log('    ' + t.obj.title);
                 t.wunderNotes.forEach(function(n) {
-                  console.log('        [' + n.obj.content + ']');
+                  console.log('        Note: [' + n.obj.content.replace(/\n/g, ' ') + ']');
+                });
+                t.wunderSubtasks.forEach(function(n) {
+                  console.log('        Subtask: [' + n.obj.title + ']');
                 });
               });
             });
