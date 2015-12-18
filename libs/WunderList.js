@@ -4,35 +4,26 @@ var util = require('util');
 var Promise = require('bluebird');
 var WunderAPI = require('./WunderAPI');
 var WunderTask = require('./WunderTask');
-// var WunderRoot = require('./WunderRoot');
 
-var WunderList = function(list, root) {
+var WunderList = function(obj, up) {
   WunderAPI.call(this)
 
-  this.obj = list;
-  this.wunderRoot = root;
+  this.obj = obj;
+  this.up = up;
 
   this.wunderTasks = [];
   // this.wunderSubtasks = [];
   // this.wunderComments = [];
   // this.wunderNotes = [];
   // this.wunderReminders = [];
+
+  this.newers = {
+    'wunderTasks': require('./WunderTask')
+  };
 };
 
 WunderList.prototype.tasks = function() {
-  var self = this;
-  return new Promise(function(resolve, reject) {
-    self.get('/tasks?list_id=' + self.obj.id)
-      .then(function(data) {
-        self.wunderTasks = data.map(function(t) {
-          return new WunderTask(t, self); 
-        });
-        resolve(self.wunderTasks);
-      })
-      .catch(function(resp) {
-        reject(resp);
-      });
-  });
+  return this.fetchAs('/tasks?list_id=' + this.obj.id, 'wunderTasks');
 };
 
 util.inherits(WunderList, WunderAPI);

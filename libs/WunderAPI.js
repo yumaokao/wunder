@@ -12,6 +12,19 @@ var WunderAPI = function() {
                               'X-Client-ID': this.client } };
 };
 
+WunderAPI.prototype.fetchAs = function(aurl, target) {
+  var self = this;
+
+  return new Promise(function(resolve, reject) {
+    self.get(aurl)
+      .then(function(data) {
+        self[target] = data.map(function(d) { return new self.newers[target](d, self); });
+        resolve(self[target]);
+      })
+      .catch(function(resp) { reject(resp); });
+  });
+};
+
 WunderAPI.prototype.get = function(aurl) {
   var wurl = this.baseURL + aurl;
   var self = this;

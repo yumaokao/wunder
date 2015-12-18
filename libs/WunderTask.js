@@ -3,12 +3,6 @@
 var util = require('util');
 var Promise = require('bluebird');
 var WunderAPI = require('./WunderAPI');
-var Newers = {
-  'wunderSubtasks': require('./WunderSubtask'),
-  'wunderComments': require('./WunderComment'),
-  'wunderNotes': require('./WunderNote'),
-  'wunderReminders': require('./WunderReminder')
-};
 
 var WunderTask = function(obj, up) {
   WunderAPI.call(this)
@@ -20,20 +14,14 @@ var WunderTask = function(obj, up) {
   this.wunderComments = [];
   this.wunderNotes = [];
   this.wunderReminders = [];
+  this.newers = {
+    'wunderSubtasks': require('./WunderSubtask'),
+    'wunderComments': require('./WunderComment'),
+    'wunderNotes': require('./WunderNote'),
+    'wunderReminders': require('./WunderReminder')
+  };
 };
 
-WunderTask.prototype.fetchAs = function(aurl, target) {
-  var self = this;
-
-  return new Promise(function(resolve, reject) {
-    self.get(aurl)
-      .then(function(data) {
-        self[target] = data.map(function(d) { return new Newers[target](d, self); });
-        resolve(data);
-      })
-      .catch(function(resp) { reject(resp); });
-  });
-};
 
 WunderTask.prototype.subtasks = function() {
   return this.fetchAs('/subtasks?task_id=' + this.obj.id, 'wunderSubtasks');
