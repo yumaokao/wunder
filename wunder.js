@@ -8,6 +8,7 @@ var pkg = require('./package');
 
 var Promise = require('bluebird');
 var chalk = require('chalk');
+var repear = require('string.prototype.repeat');
 
 program
   .version(pkg.version)
@@ -37,9 +38,9 @@ program
               console.log(chalk.bold.blue(list.obj.title + ' (' + list.wunderTasks.length + ')'));
               list.wunderTasks.forEach(function(t) {
                 // console.log('    ' + t.obj.title);
-                console.log('  ' + chalk.green(t.obj.title));
+                console.log(' '.repeat(2) + chalk.green(t.obj.title));
                 t.wunderNotes.forEach(function(n) {
-                  console.log('    Note: [' + n.obj.content.replace(/\n/g, ' ') + ']');
+                  console.log(' '.repeat(4) + '   Note: ' + n.obj.content.replace(/\n/g, '\n' + ' '.repeat(4 + 9)));
                 });
                 t.wunderSubtasks.forEach(function(n) {
                   console.log('    Subtask: [' + n.obj.title + ']');
