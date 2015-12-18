@@ -26,7 +26,7 @@ WunderAPI.prototype.get = function(aurl) {
       }
     });
   });
-}
+};
 
 module.exports = WunderAPI;
 

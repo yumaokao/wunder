@@ -17,60 +17,35 @@ var WunderTask = function(task, list) {
   this.wunderReminders = [];
 };
 
-WunderTask.prototype.subtasks = function() {
+WunderTask.prototype.fetchAs = function(aurl, target) {
   var self = this;
+
   return new Promise(function(resolve, reject) {
-    self.get('/subtasks?task_id=' + self.obj.id)
+    self.get(aurl)
       .then(function(data) {
-        self.wunderSubtasks = data;
-        resolve(self.wunderSubtasks);
+        self[target] = data;
+        resolve(data);
       })
       .catch(function(resp) {
         reject(resp);
       });
   });
+};
+
+WunderTask.prototype.subtasks = function() {
+  return this.fetchAs('/subtasks?task_id=' + this.obj.id, 'wunderSubtasks');
 };
 
 WunderTask.prototype.comments = function() {
-  var self = this;
-  return new Promise(function(resolve, reject) {
-    self.get('/task_comments?task_id=' + self.obj.id)
-      .then(function(data) {
-        self.wunderComments = data;
-        resolve(self.wunderComments);
-      })
-      .catch(function(resp) {
-        reject(resp);
-      });
-  });
+  return this.fetchAs('/task_comments?task_id=' + this.obj.id, 'wunderComments');
 };
 
 WunderTask.prototype.notes = function() {
-  var self = this;
-  return new Promise(function(resolve, reject) {
-    self.get('/notes?task_id=' + self.obj.id)
-      .then(function(data) {
-        self.wunderNotes = data;
-        resolve(self.wunderNotes);
-      })
-      .catch(function(resp) {
-        reject(resp);
-      });
-  });
+  return this.fetchAs('/notes?task_id=' + this.obj.id, 'wunderNotes');
 };
 
 WunderTask.prototype.reminders = function() {
-  var self = this;
-  return new Promise(function(resolve, reject) {
-    self.get('/reminders?task_id=' + self.obj.id)
-      .then(function(data) {
-        self.wunderReminders = data;
-        resolve(self.wunderReminders);
-      })
-      .catch(function(resp) {
-        reject(resp);
-      });
-  });
+  return this.fetchAs('/reminders?task_id=' + this.obj.id, 'wunderReminders');
 };
 
 util.inherits(WunderTask, WunderAPI);
