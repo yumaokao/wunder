@@ -3,12 +3,8 @@
 'use strict';
 
 var program = require('commander');
-var WunderRoot = require('./models/WunderRoot');
 var pkg = require('./package');
-
-var Promise = require('bluebird');
-var chalk = require('chalk');
-var repear = require('string.prototype.repeat');
+var WunderCLI = require('./libs/WunderCLI');
 
 program
   .version(pkg.version)
@@ -22,37 +18,8 @@ program
   .action(function(option) {
     var lists = option.lists || 'all';
     // console.log('YMK in command list, options ' + program.conf);
-    // console.log('YMK in command list, lists ' + lists);
-    var root = new WunderRoot();
-    root.lists().then(function(lists) {
-      lists.forEach(function(list) {
-        list.tasks().then(function(tasks) {
-          Promise.all(tasks.map(function(t) { return t.notes(); }))
-            .then(function() {
-              return Promise.all(tasks.map(function(t) { return t.subtasks(); }));
-            })
-            .then(function() {
-              return Promise.all(tasks.map(function(t) { return t.comments(); }));
-            })
-            .then(function() {
-              console.log(chalk.bold.blue(list.obj.title + ' (' + list.wunderTasks.length + ')'));
-              list.wunderTasks.forEach(function(t) {
-                // console.log('    ' + t.obj.title);
-                console.log(' '.repeat(2) + chalk.green(t.obj.title));
-                t.wunderNotes.forEach(function(n) {
-                  console.log(' '.repeat(4) + '   Note: ' + n.obj.content.replace(/\n/g, '\n' + ' '.repeat(4 + 9)));
-                });
-                t.wunderSubtasks.forEach(function(n) {
-                  console.log('    Subtask: [' + n.obj.title + ']');
-                });
-                t.wunderComments.forEach(function(n) {
-                  console.log('    Comment: [' + n.obj.text + ']');
-                });
-              });
-            });
-        }); 
-      });
-    });
+    var cli = new WunderCLI();
+    cli.lists();
   });
 
 program
