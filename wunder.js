@@ -3,7 +3,7 @@
 'use strict';
 
 var program = require('commander');
-var WunderRoot = require('./libs/WunderRoot');
+var WunderRoot = require('./models/WunderRoot');
 var pkg = require('./package');
 
 var Promise = require('bluebird');
