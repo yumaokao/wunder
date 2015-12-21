@@ -48,9 +48,10 @@ Debug
 
 Todo
 ----
-* [ ] 2015-12-14 WunderList model class libraries
+* [$] 2015-12-14 ~ 2015-12-21 WunderList model class libraries
+* [ ] 2015-12-21 Configuration infrastructure
+* [ ] 2015-12-21 Error Handeling
 * [ ] 2015-12-14 Model with local cache with version
-
 
 Reference
 ---------
