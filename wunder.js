@@ -20,6 +20,7 @@ program
     // console.log('YMK in command list, options ' + program.conf);
     var cli = new WunderCLI();
     cli.lists();
+    cli.sync().then(function() { console.log('YMK synced'); });;
   });
 
 program

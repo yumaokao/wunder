@@ -7,11 +7,40 @@ var WunderRoot = require('./models/WunderRoot');
 
 
 var WunderCLI = function() {
+  this.root = new WunderRoot();
+};
+
+// recursively sync all end points from root
+WunderCLI.prototype.sync = function() {
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    self.root.lists().then(function(lists) {
+      lists.forEach(function(list) {
+        list.tasks().then(function(tasks) {
+          Promise.all(tasks.map(function(t) { return t.notes(); }))
+            .then(function() {
+              return Promise.all(tasks.map(function(t) { return t.subtasks(); }));
+            })
+            .then(function() {
+              return Promise.all(tasks.map(function(t) { return t.comments(); }));
+            })
+            .then(function() {
+              return Promise.all(tasks.map(function(t) { return t.reminders(); }));
+            })
+            .then(function() {
+              resolve(self);
+            })
+            .catch(function(err) {
+              reject('Failed: ' + err.message);
+            });
+        });
+      });
+    });
+  });
 };
 
 WunderCLI.prototype.lists = function() {
-  var root = new WunderRoot();
-  root.lists().then(function(lists) {
+  this.root.lists().then(function(lists) {
     lists.forEach(function(list) {
       list.tasks().then(function(tasks) {
         Promise.all(tasks.map(function(t) { return t.notes(); }))
@@ -36,8 +65,8 @@ WunderCLI.prototype.lists = function() {
                   console.log('    Comment: [' + n.obj.text + ']');
                 });
               });
-              });
-          });
+        });
+      });
     });
   });
 };
