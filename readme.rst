@@ -33,6 +33,7 @@ Build Up
   $ npm install --save bluebird
   $ npm install --save chalk
   $ npm install --save string.prototype.repeat
+  $ npm install --save nconf
 
   $ npm install
 

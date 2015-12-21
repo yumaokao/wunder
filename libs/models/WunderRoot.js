@@ -5,10 +5,11 @@ var Promise = require('bluebird');
 var WunderAPI = require('./WunderAPI');
 var WunderList = require('./WunderList');
 
-var WunderRoot = function() {
+var WunderRoot = function(opts) {
   WunderAPI.call(this)
 
   this.obj = null;
+  this.options = opts;
   this.wunderLists = [];
 
   var self = this;

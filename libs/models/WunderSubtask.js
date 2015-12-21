@@ -8,6 +8,7 @@ var WunderSubtask = function(obj, up) {
 
   this.obj = obj;
   this.up = up;
+  this.options = up.options;
 };
 
 util.inherits(WunderSubtask, WunderAPI);

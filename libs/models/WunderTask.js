@@ -13,6 +13,7 @@ var WunderTask = function(obj, up) {
 
   this.obj = obj;
   this.up = up;
+  this.options = up.options;
 
   this.wunderSubtasks = [];
   this.wunderComments = [];

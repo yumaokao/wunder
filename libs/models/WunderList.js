@@ -10,6 +10,7 @@ var WunderList = function(obj, up) {
 
   this.obj = obj;
   this.up = up;
+  this.options = up.options;
 
   this.wunderTasks = [];
   // this.wunderSubtasks = [];

@@ -4,8 +4,10 @@ var Promise = require('bluebird');
 var WunderRoot = require('./models/WunderRoot');
 
 
-var WunderCLI = function() {
-  this.root = new WunderRoot();
+var WunderCLI = function(auth) {
+  var opts = { headers: { 'X-Access-Token': auth.accessToken,
+                              'X-Client-ID': auth.clientID } };
+  this.root = new WunderRoot(opts);
 };
 
 // recursively sync all end points from root
