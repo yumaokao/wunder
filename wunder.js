@@ -11,6 +11,7 @@ var WunderPrint = require('./libs/WunderPrint');
 // Default configurations
 nconf.defaults({
   'Auth': {
+    'baseURL': 'http://a.wunderlist.com/api/v1',
     'accessToken': '93b7a581f3204d31128bb816f459a4842cceb460976e728f155c1b2ca63a',
     'clientID': '6cca1923696f790a903d'
   }

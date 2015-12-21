@@ -5,7 +5,7 @@ var WunderRoot = require('./models/WunderRoot');
 
 
 var WunderCLI = function(auth) {
-  this.baseURL = 'http://a.wunderlist.com/api/v1';
+  this.baseURL = auth.baseURL;
   this.options = { headers: { 'X-Access-Token': auth.accessToken,
                               'X-Client-ID': auth.clientID } };
   this.root = new WunderRoot(null, this);
