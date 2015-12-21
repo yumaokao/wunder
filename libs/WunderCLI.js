@@ -14,28 +14,33 @@ var WunderCLI = function() {
 WunderCLI.prototype.sync = function() {
   var self = this;
   return new Promise(function(resolve, reject) {
-    self.root.lists().then(function(lists) {
-      lists.forEach(function(list) {
-        list.tasks().then(function(tasks) {
-          Promise.all(tasks.map(function(t) { return t.notes(); }))
-            .then(function() {
-              return Promise.all(tasks.map(function(t) { return t.subtasks(); }));
-            })
-            .then(function() {
-              return Promise.all(tasks.map(function(t) { return t.comments(); }));
-            })
-            .then(function() {
-              return Promise.all(tasks.map(function(t) { return t.reminders(); }));
-            })
-            .then(function() {
-              resolve(self);
-            })
-            .catch(function(err) {
-              reject('Failed: ' + err.message);
-            });
-        });
+    self.root.lists()
+      .then(function(lists) {
+        return Promise.all(lists.map(function(l) { return l.tasks(); }));
+      })
+      .then(function() {
+        var tasks = [].concat.apply([], self.root.wunderLists.map(function(l) { return l.wunderTasks; }));
+        var proms = [].concat.apply([], tasks.map(function(t) { return t.notes(); }));
+        return Promise.all(proms);
+      })
+      .then(function() {
+        var tasks = [].concat.apply([], self.root.wunderLists.map(function(l) { return l.wunderTasks; }));
+        var proms = [].concat.apply([], tasks.map(function(t) { return t.subtasks(); }));
+        return Promise.all(proms);
+      })
+      .then(function() {
+        var tasks = [].concat.apply([], self.root.wunderLists.map(function(l) { return l.wunderTasks; }));
+        var proms = [].concat.apply([], tasks.map(function(t) { return t.comments(); }));
+        return Promise.all(proms);
+      })
+      .then(function() {
+        var tasks = [].concat.apply([], self.root.wunderLists.map(function(l) { return l.wunderTasks; }));
+        var proms = [].concat.apply([], tasks.map(function(t) { return t.reminders(); }));
+        return Promise.all(proms);
+      })
+      .then(function() {
+        resolve(self);
       });
-    });
   });
 };
 

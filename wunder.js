@@ -5,6 +5,7 @@
 var program = require('commander');
 var pkg = require('./package');
 var WunderCLI = require('./libs/WunderCLI');
+var WunderPrint = require('./libs/WunderPrint');
 
 program
   .version(pkg.version)
@@ -19,8 +20,10 @@ program
     var lists = option.lists || 'all';
     // console.log('YMK in command list, options ' + program.conf);
     var cli = new WunderCLI();
-    cli.lists();
-    cli.sync().then(function() { console.log('YMK synced'); });;
+    var printer = new WunderPrint();
+    cli.sync()
+      .then(printer.colorPrint)
+      .catch(function(err) { console.log('Failed'); });
   });
 
 program
