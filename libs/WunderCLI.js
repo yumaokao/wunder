@@ -5,9 +5,10 @@ var WunderRoot = require('./models/WunderRoot');
 
 
 var WunderCLI = function(auth) {
-  var opts = { headers: { 'X-Access-Token': auth.accessToken,
+  this.baseURL = 'http://a.wunderlist.com/api/v1';
+  this.options = { headers: { 'X-Access-Token': auth.accessToken,
                               'X-Client-ID': auth.clientID } };
-  this.root = new WunderRoot(opts);
+  this.root = new WunderRoot(null, this);
 };
 
 // recursively sync all end points from root

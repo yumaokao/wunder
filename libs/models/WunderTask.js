@@ -9,11 +9,7 @@ var WunderNote = require('./WunderNote');
 var WunderReminder = require('./WunderReminder');
 
 var WunderTask = function(obj, up) {
-  WunderAPI.call(this)
-
-  this.obj = obj;
-  this.up = up;
-  this.options = up.options;
+  WunderAPI.call(this, obj, up)
 
   this.wunderSubtasks = [];
   this.wunderComments = [];

@@ -3,14 +3,12 @@
 var rest = require('restler');
 var Promise = require('bluebird');
 
-var WunderAPI = function() {
-  // this.token = '93b7a581f3204d31128bb816f459a4842cceb460976e728f155c1b2ca63a';
-  // this.client = '6cca1923696f790a903d';
-
-  this.baseURL = 'http://a.wunderlist.com/api/v1';
-  // this.options = { headers: { 'X-Access-Token': this.token,
-  //                            'X-Client-ID': this.client } };
-};
+var WunderAPI = function(obj, up) {
+  this.obj = obj;
+  this.up = up;
+  this.options = up.options;
+  this.baseURL = up.baseURL;
+}
 
 WunderAPI.prototype.fetchAs = function(aurl, target, newer) {
   var self = this;

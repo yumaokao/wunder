@@ -4,11 +4,7 @@ var util = require('util');
 var WunderAPI = require('./WunderAPI');
 
 var WunderSubtask = function(obj, up) {
-  WunderAPI.call(this)
-
-  this.obj = obj;
-  this.up = up;
-  this.options = up.options;
+  WunderAPI.call(this, obj, up)
 };
 
 util.inherits(WunderSubtask, WunderAPI);
