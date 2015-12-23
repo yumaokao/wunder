@@ -12,7 +12,7 @@ var WunderRoot = function(obj, up) {
   this.get('/root')
     .then(function(data) { self.obj = data; })
     .catch(function(error) {
-      console.log('Error: ' + error.message);
+      console.log('Failed: ' + error.message);
     });
 };
 

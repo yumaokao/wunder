@@ -7,7 +7,8 @@ var WunderRoot = require('./models/WunderRoot');
 var WunderCLI = function(auth) {
   this.baseURL = auth.baseURL;
   this.options = { headers: { 'X-Access-Token': auth.accessToken,
-                              'X-Client-ID': auth.clientID } };
+                              'X-Client-ID': auth.clientID,
+                              'Content-Type': 'application/json' } };
   this.root = new WunderRoot(null, this);
 };
 
@@ -43,9 +44,15 @@ WunderCLI.prototype.sync = function() {
         resolve(self);
       })
       .catch(function(error) {
-        console.log('Error: ' + error.message);
+        // console.log('Error: ' + error.message);
+        reject(error);
       });
   });
+};
+
+WunderCLI.prototype.addList = function(nobj) {
+  // return this.root.post('/lists?title=' + encodeURIComponent(nobj.title));
+  return this.root.post('/lists', nobj);
 };
 
 module.exports = WunderCLI;

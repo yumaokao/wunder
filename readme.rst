@@ -34,6 +34,7 @@ Build Up
   $ npm install --save chalk
   $ npm install --save string.prototype.repeat
   $ npm install --save nconf
+  $ npm install --save merge
 
   $ npm install
 
@@ -52,7 +53,10 @@ Todo
 * [$] 2015-12-14 ~ 2015-12-21 WunderList model class libraries
 * [$] 2015-12-21 ~ 2015-12-21 Configuration infrastructure
 * [$] 2015-12-21 ~ 2015-12-23 Error Handeling
-* [ ] 2015-12-23 padding with padding configs
+* [%] 2015-12-23 Add new list, task, subtask
+* [ ] 2015-12-23 Padding with padding configs
+* [ ] 2015-12-23 Auth to generate access token per user
+* [ ] 2015-12-23 Refactor WunderAPI.js
 * [ ] 2015-12-14 Model with local cache with version
 
 Reference

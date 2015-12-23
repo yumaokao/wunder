@@ -1,6 +1,7 @@
 'use strict';
 
 var rest = require('restler');
+var merge = require('merge');
 var Promise = require('bluebird');
 
 var WunderAPI = function(obj, up) {
@@ -25,12 +26,32 @@ WunderAPI.prototype.fetchAs = function(aurl, target, newer) {
 
 WunderAPI.prototype.get = function(aurl) {
   var wurl = this.baseURL + aurl;
+  var opts = merge({}, this.options);
   var self = this;
 
   return new Promise(function(resolve, reject) {
-    rest.get(wurl, self.options).on('complete', function(data, resp) {
+    rest.get(wurl, opts).on('complete', function(data, resp) {
       // console.log("url response " + resp.statusCode);
       if (resp.statusCode == 200) {
+        resolve(data);
+      } else {
+        var error = new WunderError(resp);
+        reject(error);
+      }
+    });
+  });
+};
+
+WunderAPI.prototype.post = function(aurl, nobj) {
+  var wurl = this.baseURL + aurl;
+  var opts = merge({}, this.options);
+  opts.data = JSON.stringify(nobj);
+  var self = this;
+
+  return new Promise(function(resolve, reject) {
+    rest.post(wurl, opts).on('complete', function(data, resp) {
+      // console.log("url response " + resp.statusCode);
+      if (resp.statusCode == 201) {
         resolve(data);
       } else {
         var error = new WunderError(resp);

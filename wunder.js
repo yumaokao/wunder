@@ -23,7 +23,7 @@ program
 
 program
   .command('auth')
-  .description('Auth wunder')
+  .description('[TODO] Auth wunder')
   .action(function() {
     console.log('YMK in command program.conf ' + program.conf);
     console.log(nconf.get('Auth'));
@@ -33,8 +33,8 @@ program
 program
   .command('list')
   .alias('ls')
-  .description('LIST all lists or tasks')
-  .option('-l, --lists <list>', 'Which list to show')
+  .description('List all lists and tasks with filters')
+  .option('-l, --lists <list>', 'Which lists to show only')
   .action(function(option) {
     // var lists = option.lists || 'all';
 
@@ -42,7 +42,19 @@ program
     var printer = new WunderPrint();
     cli.sync()
       .then(printer.colorPrint)
-      .catch(function(err) { console.log('Failed'); });
+      .catch(function(err) { console.log('Failed: ' + err.message); });
+  });
+
+program
+  .command('add-list <title>')
+  .description('Add a list')
+  .action(function(title, option) {
+    var cli = new WunderCLI(nconf.get('Auth'));
+    var nobj = { 'title': title };
+    cli.addList(nobj)
+      .then(function() { console.log('Successfully Added'); })
+      .catch(function(err) { console.log('Failed: ' + err.message); });
+    // console.log('YMK in command add type [' + title + ']')
   });
 
 program
