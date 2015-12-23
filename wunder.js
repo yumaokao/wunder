@@ -21,6 +21,7 @@ program
   .version(pkg.version)
   .option('-c, --conf <dir>', 'Specific another configuration directory');
 
+// [auth]
 program
   .command('auth')
   .description('[TODO] Auth wunder')
@@ -30,6 +31,7 @@ program
     // nconf.file();
   });
 
+// [list]
 program
   .command('list')
   .alias('ls')
@@ -45,8 +47,10 @@ program
       .catch(function(err) { console.log('Failed: ' + err.message); });
   });
 
+// url: /lists
 program
   .command('add-list <title>')
+  .alias('al')
   .description('Add a list')
   .action(function(title, option) {
     var cli = new WunderCLI(nconf.get('Auth'));
@@ -54,7 +58,15 @@ program
     cli.addList(nobj)
       .then(function() { console.log('Successfully Added'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
-    // console.log('YMK in command add type [' + title + ']')
+  });
+program
+  .command('delete-list')
+  .alias('dl')
+  .description('Delete lists')
+  .option('-l, --lists <list>', 'Which lists to show only')
+  .action(function(option) {
+    var cli = new WunderCLI(nconf.get('Auth'));
+    console.log('YMK in command delte-list');
   });
 
 program
