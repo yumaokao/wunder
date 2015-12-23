@@ -41,6 +41,9 @@ WunderCLI.prototype.sync = function() {
       })
       .then(function() {
         resolve(self);
+      })
+      .catch(function(error) {
+        console.log('Error: ' + error.message);
       });
   });
 };

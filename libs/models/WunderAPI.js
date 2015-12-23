@@ -33,11 +33,20 @@ WunderAPI.prototype.get = function(aurl) {
       if (resp.statusCode == 200) {
         resolve(data);
       } else {
-        reject(resp);
+        var error = new WunderError(resp);
+        reject(error);
       }
     });
   });
 };
+
+var WunderError = function(resp) {
+  this.method = resp.req.method;
+  this.path = resp.req.path;
+  this.code = resp.statusCode;
+  this.error = resp.statusMessage;
+  this.message = this.method + ' ' + this.path + ' => ' + this.code + ': ' + this.error;
+}
 
 module.exports = WunderAPI;
 

@@ -9,7 +9,11 @@ var WunderRoot = function(obj, up) {
   WunderAPI.call(this, obj, up)
 
   var self = this;
-  this.get('/root').then(function(data) { self.obj = data; });
+  this.get('/root')
+    .then(function(data) { self.obj = data; })
+    .catch(function(error) {
+      console.log('Error: ' + error.message);
+    });
 };
 
 WunderRoot.prototype.lists = function() {
