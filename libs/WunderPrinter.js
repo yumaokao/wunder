@@ -4,10 +4,10 @@ var Promise = require('bluebird');
 var chalk = require('chalk');
 var repeat = require('string.prototype.repeat');
 
-var WunderPrint = function() {
+var WunderPrinter = function() {
 };
 
-WunderPrint.prototype.colorPrint = function(cli) {
+WunderPrinter.prototype.colorPrint = function(cli) {
   root = cli.root;
   root.wunderLists.forEach(function(l) {
     console.log(chalk.bold.blue(l.obj.title + ' (' + l.wunderTasks.length + ')'));
@@ -30,6 +30,6 @@ WunderPrint.prototype.colorPrint = function(cli) {
   });
 };
 
-module.exports = WunderPrint;
+module.exports = WunderPrinter;
 
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai
