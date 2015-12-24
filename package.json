@@ -18,6 +18,7 @@
     "commander": "^2.9.0",
     "merge": "^1.2.0",
     "nconf": "^0.8.2",
+    "prompt": "^0.2.14",
     "restler": "^3.4.0",
     "string.prototype.repeat": "^0.2.0"
   }

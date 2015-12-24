@@ -35,6 +35,7 @@ Build Up
   $ npm install --save string.prototype.repeat
   $ npm install --save nconf
   $ npm install --save merge
+  $ npm install --save prompt
 
   $ npm install
 
