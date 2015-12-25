@@ -7,6 +7,7 @@ var pkg = require('./package');
 var nconf = require('nconf');
 var WunderCLI = require('./libs/WunderCLI');
 var WunderPrinter = require('./libs/WunderPrinter');
+var WunderSelector = require('./libs/WunderSelector');
 
 var Promise = require('bluebird');
 var prompt = require('prompt');
@@ -38,10 +39,9 @@ program
 
 // [list]
 program
-  .command('list')
+  .command('list [lists...]')
   .alias('ls')
   .description('List all lists and tasks with filters')
-  .option('-l, --lists <list>', 'Which lists to show only')
   .action(function(option) {
     // var lists = option.lists || 'all';
 
@@ -65,20 +65,18 @@ program
       .catch(function(err) { console.log('Failed: ' + err.message); });
   });
 program
-  .command('delete-list')
+  .command('delete-list [lists...]')
   .alias('dl')
   .description('Delete lists')
-  .option('-l, --lists <list>', 'Which lists to show only')
-  .action(function(option) {
+  .action(function(lists) {
     var cli = new WunderCLI(nconf.get('Auth'));
-    prompt.start();
+    var sel = new WunderSelector();
+    // prompt.start();
     // prompt.getAsync(['mesg']).then(function(res) { console.log('YMK mesg ' + res.mesg); });
     cli.sync()
-      .then(function() { return prompt.getAsync(['mesg']); })
-      .then(function(res) {
-        console.log('YMK cli ' + cli);
-        console.log('YMK mesg ' + res.mesg);
-      });
+      // .then(function() { return prompt.getAsync(['mesg']); })
+      .then(function(cli) { return sel.selectLists(cli, { 'lists': lists }); })
+      .catch(function(err) { console.log('Failed: ' + err); });
     // console.log('YMK in command delte-list');
   });
 
