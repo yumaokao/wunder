@@ -14,6 +14,19 @@ WunderSelector.prototype.selectLists = function(cli, filters) {
   root.wunderLists.forEach(function(l) {
     console.log(chalk.bold.blue(l.obj.title + ' (' + l.wunderTasks.length + ')'));
   });
+  var schema = {
+    properties: {
+      lists: {
+        description: 'Lists to delete (e.g. 1,2,3-4): ',
+        pattern: /^[\d,\s]+$/,
+        message: 'Numbers only (e.g. 1,2, 3,4-5): ',
+        required: true
+      }
+    }
+  };
+  prompt.message = 'Select '
+  prompt.start();
+  return prompt.getAsync(schema);
 };
 
 module.exports = WunderSelector;

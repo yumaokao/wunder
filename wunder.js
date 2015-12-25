@@ -9,11 +9,6 @@ var WunderCLI = require('./libs/WunderCLI');
 var WunderPrinter = require('./libs/WunderPrinter');
 var WunderSelector = require('./libs/WunderSelector');
 
-var Promise = require('bluebird');
-var prompt = require('prompt');
-Promise.promisifyAll(prompt);
-
-
 // Default configurations
 nconf.defaults({
   'Auth': {
@@ -71,11 +66,9 @@ program
   .action(function(lists) {
     var cli = new WunderCLI(nconf.get('Auth'));
     var sel = new WunderSelector();
-    // prompt.start();
-    // prompt.getAsync(['mesg']).then(function(res) { console.log('YMK mesg ' + res.mesg); });
     cli.sync()
-      // .then(function() { return prompt.getAsync(['mesg']); })
       .then(function(cli) { return sel.selectLists(cli, { 'lists': lists }); })
+      .then(function(res) { console.log('YMK mesg ' + res.mesg); })
       .catch(function(err) { console.log('Failed: ' + err); });
     // console.log('YMK in command delte-list');
   });
