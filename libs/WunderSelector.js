@@ -18,7 +18,7 @@ WunderSelector.prototype.selectLists = function(cli, filters) {
     properties: {
       lists: {
         description: 'Lists to delete (e.g. 1,2,3-4): ',
-        pattern: /^[\d,\s]+$/,
+        pattern: /^[\d,\-\s]+$/,
         message: 'Numbers only (e.g. 1,2, 3,4-5): ',
         required: true
       }
@@ -26,7 +26,26 @@ WunderSelector.prototype.selectLists = function(cli, filters) {
   };
   prompt.message = 'Select '
   prompt.start();
-  return prompt.getAsync(schema);
+  // return prompt.getAsync(schema);
+  return new Promise(function(resolve, reject) {
+    prompt.getAsync(schema)
+      .then(function(res) {
+        var nums = res.lists.split(',');
+        // lis = lis.map(function(l) { return l.trim(); });
+        nums.forEach(function(ns) {
+          console.log(ns);
+          var ranges = ns.split('-');
+          ranges.map(function(r) { return r.trim(); });
+          var ind = Math.min(ranges);
+          var len = (ranges.length == 2) ?
+            Math.abs(ranges[1] - ranges[0]) + 1 : 1;
+          console.log(' ind ' + ind + ', len ' + len);
+        });
+
+        resolve(cli);
+      })
+      .catch(function(err) { reject({ message: err }); });
+  });
 };
 
 module.exports = WunderSelector;
