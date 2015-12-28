@@ -32,15 +32,16 @@ WunderSelector.prototype.selectLists = function(cli, filters) {
       .then(function(res) {
         var nums = res.lists.split(',');
         // lis = lis.map(function(l) { return l.trim(); });
-        nums.forEach(function(ns) {
-          console.log(ns);
+        var lls = nums.map(function(ns) {
+          // console.log(ns);
           var ranges = ns.split('-');
           ranges.map(function(r) { return r.trim(); });
           var ind = Math.min(ranges);
           var len = (ranges.length == 2) ?
             Math.abs(ranges[1] - ranges[0]) + 1 : 1;
-          console.log(' ind ' + ind + ', len ' + len);
+          return cli.WunderList.splice(ind, len);
         });
+        console.log(lls);
 
         resolve(cli);
       })
