@@ -18,7 +18,9 @@ var selector = function(tstr, objs) {
     return objs.slice(ind - 1, end);
   });
   var lists = [].concat.apply([], lls);
+  lists = lists.filter(function(value, index, self) { return self.indexOf(value) === index; });
   console.log('Test: \'' + tstr + '\' --> (' + lists.length + ') ' + lists);
+  return lists;
 };
 
 // Tests
@@ -26,6 +28,8 @@ selector('1,', objs);
 selector('1, 2', objs);
 selector('-1, 2', objs);
 selector('-1, -2', objs);
+selector('1, 1', objs);
+selector('1,1, 1, 1', objs);
 selector('2-3-5', objs);
 selector('1,2, 3, 5 - 7', objs);
 selector('1,2, 3, 5 - 11', objs);

@@ -68,7 +68,7 @@ program
     var sel = new WunderSelector();
     cli.sync()
       .then(function(cli) { return sel.selectLists(cli, { 'lists': lists }); })
-      .then(function(cli) { console.log('YMK cli ' + cli); })
+      .then(function(lists) { console.log('YMK lists to delete ' + lists); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
     // console.log('YMK in command delte-list');
   });

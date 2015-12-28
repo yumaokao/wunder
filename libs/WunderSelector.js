@@ -26,27 +26,34 @@ WunderSelector.prototype.selectLists = function(cli, filters) {
   };
   prompt.message = 'Select '
   prompt.start();
-  // return prompt.getAsync(schema);
+  var self = this;
   return new Promise(function(resolve, reject) {
     prompt.getAsync(schema)
       .then(function(res) {
-        var nums = res.lists.split(',');
-        // lis = lis.map(function(l) { return l.trim(); });
-        var lls = nums.map(function(ns) {
-          // console.log(ns);
-          var ranges = ns.split('-');
-          ranges.map(function(r) { return r.trim(); });
-          var ind = Math.min(ranges);
-          var len = (ranges.length == 2) ?
-            Math.abs(ranges[1] - ranges[0]) + 1 : 1;
-          return cli.WunderList.splice(ind, len);
-        });
-        console.log(lls);
-
-        resolve(cli);
+        resolve(self.parseInputs(res.lists, root.wunderLists));
       })
       .catch(function(err) { reject({ message: err }); });
   });
+};
+
+WunderSelector.prototype.parseInputs = function(tstr, objs) {
+  var nums = tstr.split(',');
+  // lis = lis.map(function(l) { return l.trim(); });
+  var lls = nums.map(function(ns) {
+    // console.log(ns);
+    var ranges = ns.split('-');
+    ranges = ranges.map(function(r) { return r.trim(); });
+    var ind = Math.min.apply(Math, ranges);
+    var end = Math.max.apply(Math, ranges);
+    var len = (ranges.length == 2) ?
+      Math.abs(ranges[1] - ranges[0]) + 1 : 1;
+    // return objs.slice(ind - 1, len);
+    return objs.slice(ind - 1, end);
+  });
+  var lists = [].concat.apply([], lls);
+  lists = lists.filter(function(value, index, self) { return self.indexOf(value) === index; });
+  // console.log('Test: \'' + tstr + '\' --> (' + lists.length + ') ' + lists);
+  return lists;
 };
 
 module.exports = WunderSelector;
