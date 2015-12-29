@@ -20,6 +20,10 @@ WunderList.prototype.tasks = function() {
                       'wunderTasks', WunderTask);
 };
 
+WunderList.prototype.delete = function() {
+  return this.del('/lists/' + this.obj.id + '?revision=' + this.obj.revision);
+};
+
 util.inherits(WunderList, WunderAPI);
 module.exports = WunderList;
 

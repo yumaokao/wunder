@@ -11,8 +11,9 @@ var WunderSelector = function() { };
 WunderSelector.prototype.selectLists = function(cli, filters) {
   root = cli.root;
   filters = filters || { };
-  root.wunderLists.forEach(function(l) {
-    console.log(chalk.bold.blue(l.obj.title + ' (' + l.wunderTasks.length + ')'));
+  root.wunderLists.forEach(function(l, i) {
+    console.log(chalk.black.bgYellow(i + 1) + ' ' +
+                chalk.bold.blue(l.obj.title + ' (' + l.wunderTasks.length + ')'));
   });
   var schema = {
     properties: {

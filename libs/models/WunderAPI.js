@@ -61,6 +61,24 @@ WunderAPI.prototype.post = function(aurl, nobj) {
   });
 };
 
+WunderAPI.prototype.del = function(aurl) {
+  var wurl = this.baseURL + aurl;
+  var opts = merge({}, this.options);
+  var self = this;
+
+  return new Promise(function(resolve, reject) {
+    rest.del(wurl, opts).on('complete', function(data, resp) {
+      // console.log("url response " + resp.statusCode);
+      if (resp.statusCode == 204) {
+        resolve(data);
+      } else {
+        var error = new WunderError(resp);
+        reject(error);
+      }
+    });
+  });
+};
+
 var WunderError = function(resp) {
   this.method = resp.req.method;
   this.path = resp.req.path;
