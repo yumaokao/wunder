@@ -55,6 +55,10 @@ WunderCLI.prototype.addList = function(nobj) {
   return this.root.post('/lists', nobj);
 };
 
+WunderCLI.prototype.deleteLists = function(lists) {
+  return Promise.all(lists.map(function(l) { return l.delete(); }));
+};
+
 module.exports = WunderCLI;
 
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai
