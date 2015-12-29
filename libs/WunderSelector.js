@@ -18,22 +18,48 @@ WunderSelector.prototype.selectLists = function(cli, filters) {
   var schema = {
     properties: {
       lists: {
-        description: 'Lists to delete (e.g. 1,2,3-4): ',
+        description: 'Lists to delete (e.g. 1,2,3-4)',
         pattern: /^[\d,\-\s]+$/,
-        message: 'Numbers only (e.g. 1,2, 3,4-5): ',
+        message: 'Numbers only (e.g. 1,2, 3,4-5)',
         required: true
       }
     }
   };
-  prompt.message = 'Select '
+  prompt.message = 'Select'
   prompt.start();
   var self = this;
   return new Promise(function(resolve, reject) {
     prompt.getAsync(schema)
       .then(function(res) {
-        resolve(self.parseInputs(res.lists, root.wunderLists));
+        return self.confirmLists(self.parseInputs(res.lists, root.wunderLists));
       })
+      .then(function(lists) { resolve(lists); })
       .catch(function(err) { reject({ message: err }); });
+  });
+};
+
+WunderSelector.prototype.confirmLists = function(lists) {
+  lists.forEach(function(l) {
+    console.log(chalk.black.bgYellow('D') + ' ' +
+                chalk.bold.blue(l.obj.title + ' (' + l.wunderTasks.length + ')'));
+  });
+  var schema = {
+    properties: {
+      confirm: {
+        description: 'Sure to delete these lists(' + lists.length + ') ? [y/N]',
+        pattern: /^[YyNn]$/,
+        message: 'y or n',
+        default: 'n',
+        required: true
+      }
+    }
+  };
+  prompt.message = 'Confirm'
+  prompt.start();
+  return new Promise(function(resolve, reject) {
+    prompt.getAsync(schema)
+    .then(function(res) { resolve(res.confirm.toLowerCase() === 'y' ? lists : []); })
+    .catch(function(err) { reject({ message: err }); });
   });
 };
 
