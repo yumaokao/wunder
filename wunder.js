@@ -49,13 +49,12 @@ program
 
 // url: /lists
 program
-  .command('add-list <title>')
-  .alias('al')
-  .description('Add a list')
+  .command('new-list <title>')
+  .alias('nl')
+  .description('New a list')
   .action(function(title, option) {
     var cli = new WunderCLI(nconf.get('Auth'));
-    var nobj = { 'title': title };
-    cli.addList(nobj)
+    cli.addList({ 'title': title })
       .then(function() { console.log('Successfully Added'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
   });
@@ -73,6 +72,8 @@ program
       .catch(function(err) { console.log('Failed: ' + err.message); });
     // console.log('YMK in command delte-list');
   });
+
+// url: /tasks
 
 program
   .parse(process.argv);

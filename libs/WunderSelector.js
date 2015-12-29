@@ -15,23 +15,13 @@ WunderSelector.prototype.selectLists = function(cli, filters) {
     console.log(chalk.black.bgYellow(i + 1) + ' ' +
                 chalk.bold.blue(l.obj.title + ' (' + l.wunderTasks.length + ')'));
   });
-  var schema = {
-    properties: {
-      lists: {
-        description: 'Lists to delete (e.g. 1,2,3-4)',
-        pattern: /^[\d,\-\s]+$/,
-        message: 'Numbers only (e.g. 1,2, 3,4-5)',
-        required: true
-      }
-    }
-  };
-  prompt.message = 'Select'
-  prompt.start();
   var self = this;
   return new Promise(function(resolve, reject) {
-    prompt.getAsync(schema)
+    prompt.message = 'Select'
+    prompt.start();
+    prompt.getAsync(self.schemaNumberRange('Lists to delete'))
       .then(function(res) {
-        return self.confirmLists(self.parseInputs(res.lists, root.wunderLists));
+        return self.confirmLists(self.parseNumberRange(res.lists, root.wunderLists));
       })
       .then(function(lists) { resolve(lists); })
       .catch(function(err) { reject({ message: err }); });
@@ -63,7 +53,20 @@ WunderSelector.prototype.confirmLists = function(lists) {
   });
 };
 
-WunderSelector.prototype.parseInputs = function(tstr, objs) {
+WunderSelector.prototype.schemaNumberRange = function(act) {
+  return {
+    properties: {
+      lists: {
+        description: act + ' (e.g. 1,2,3-4)',
+        pattern: /^[\d,\-\s]+$/,
+        message: 'Numbers only (e.g. 1,2, 3,4-5)',
+        required: true
+      }
+    }
+  };
+};
+
+WunderSelector.prototype.parseNumberRange = function(tstr, objs) {
   var nums = tstr.split(',');
   // lis = lis.map(function(l) { return l.trim(); });
   var lls = nums.map(function(ns) {
