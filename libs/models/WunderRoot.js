@@ -15,6 +15,7 @@ var WunderRoot = function(obj, up) {
       console.log('Failed: ' + error.message);
     });
 };
+util.inherits(WunderRoot, WunderAPI);
 
 WunderRoot.prototype.lists = function() {
   var self = this;
@@ -32,7 +33,6 @@ WunderRoot.prototype.lists = function() {
   });
 };
 
-util.inherits(WunderRoot, WunderAPI);
 module.exports = WunderRoot;
 
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai

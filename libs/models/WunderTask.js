@@ -16,7 +16,7 @@ var WunderTask = function(obj, up) {
   this.wunderNotes = [];
   this.wunderReminders = [];
 };
-
+util.inherits(WunderTask, WunderAPI);
 
 WunderTask.prototype.subtasks = function() {
   return this.fetchAs('/subtasks?task_id=' + this.obj.id,
@@ -38,7 +38,6 @@ WunderTask.prototype.reminders = function() {
                       'wunderReminders', WunderReminder);
 };
 
-util.inherits(WunderTask, WunderAPI);
 module.exports = WunderTask;
 
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai
