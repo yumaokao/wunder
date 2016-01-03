@@ -64,10 +64,10 @@ program
     var cli = new WunderCLI(nconf.get('Auth'));
     var sel = new WunderSelector();
     cli.sync()
-      .then(function(cli) { return sel.selectLists(cli, 'delete', { 'lists': lists }); })
-      .then(function(ls) {})
+      .then(function(cli) { return sel.selectDeleteLists(cli, { 'lists': lists }); })
+      .then(function(ls) { return sel.confirmDeleteLists(ls); })
       .then(cli.deleteLists)
-      .then(function() { console.log('Successfully Deleted'); })
+      .then(function(num) { console.log(num + 'Lists Successfully Deleted'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
     // console.log('YMK in command delte-list');
   });
@@ -80,10 +80,9 @@ program
     var cli = new WunderCLI(nconf.get('Auth'));
     var sel = new WunderSelector();
     cli.sync()
-      .then(function(cli) { return sel.selectLists(cli, 'rename', { 'lists': lists }, false); })
-      // .then(cli.deleteLists)
+      .then(function(cli) { return sel.selectRenameLists(cli, { 'lists': lists }); })
       .then(function(ls) { console.log(ls); })
-      .then(function() { console.log('Successfully Renamed'); })
+      .then(function(num) { console.log(num + 'Lists Successfully Renamed'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
   });
 

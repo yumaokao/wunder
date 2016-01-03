@@ -8,10 +8,24 @@ Promise.promisifyAll(prompt);
 
 var WunderSelector = function() { };
 
-WunderSelector.prototype.selectLists = function(cli, action, filters, confirm) {
+WunderSelector.prototype.selectDeleteLists = function(cli, filters) {
+  return this.selectLists(cli, 'delete', filters);
+};
+WunderSelector.prototype.selectRenameLists = function(cli, filters) {
+  return this.selectLists(cli, 'rename', filters);
+};
+WunderSelector.prototype.confirmDeleteLists = function(lists) {
+  lists.forEach(function(l) {
+    console.log(chalk.black.bgYellow('D') + ' ' +
+    chalk.bold.blue(l.obj.title + ' (' + l.wunderTasks.length + ')'));
+  });
+  return this.confirmLists('delete', lists);
+};
+
+WunderSelector.prototype.selectLists = function(cli, action, filters) {
   root = cli.root;
-  if (confirm === undefined)
-    confirm = true;
+  // if (confirm === undefined)
+  //   confirm = true;
   filters = filters || { };
   root.wunderLists.forEach(function(l, i) {
     console.log(chalk.black.bgYellow(i + 1) + ' ' +
@@ -22,23 +36,12 @@ WunderSelector.prototype.selectLists = function(cli, action, filters, confirm) {
     prompt.message = 'Select'
     prompt.start();
     prompt.getAsync(self.schemaNumberRange('Lists to ' + action))
-      .then(function(res) {
-        var lobjs = self.parseNumberRange(res.lists, root.wunderLists);
-        if (confirm === true)
-          return self.confirmLists(action, lobjs);
-        else
-          return new Promise(function(res, rej) { res(lobjs); });
-      })
-      .then(function(lists) { resolve(lists); })
+      .then(function(res) { resolve(self.parseNumberRange(res.lists, root.wunderLists)); })
       .catch(function(err) { reject({ message: err }); });
   });
 };
 
 WunderSelector.prototype.confirmLists = function(action, lists) {
-  lists.forEach(function(l) {
-    console.log(chalk.black.bgYellow('?') + ' ' +
-                chalk.bold.blue(l.obj.title + ' (' + l.wunderTasks.length + ')'));
-  });
   var schema = {
     properties: {
       confirm: {
