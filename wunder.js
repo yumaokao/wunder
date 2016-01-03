@@ -37,9 +37,7 @@ program
   .command('list [lists...]')
   .alias('ls')
   .description('List all lists and tasks with filters')
-  .action(function(option) {
-    // var lists = option.lists || 'all';
-
+  .action(function(lists) {
     var cli = new WunderCLI(nconf.get('Auth'));
     var printer = new WunderPrinter();
     cli.sync()
@@ -52,7 +50,7 @@ program
   .command('new-list <title>')
   .alias('nl')
   .description('New a list')
-  .action(function(title, option) {
+  .action(function(title) {
     var cli = new WunderCLI(nconf.get('Auth'));
     cli.addList({ 'title': title })
       .then(function() { console.log('Successfully Added'); })
@@ -67,6 +65,7 @@ program
     var sel = new WunderSelector();
     cli.sync()
       .then(function(cli) { return sel.selectLists(cli, 'delete', { 'lists': lists }); })
+      .then(function(ls) {})
       .then(cli.deleteLists)
       .then(function() { console.log('Successfully Deleted'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
@@ -76,7 +75,8 @@ program
   .command('rename-list [lists...]')
   .alias('rl')
   .description('Rename lists')
-  .action(function(lists) {
+  .option('-t, --titles [title]', 'New titles in order', function(v, t) { t.push(v); return t; }, [])
+  .action(function(lists, options) {
     var cli = new WunderCLI(nconf.get('Auth'));
     var sel = new WunderSelector();
     cli.sync()
@@ -85,12 +85,26 @@ program
       .then(function(ls) { console.log(ls); })
       .then(function() { console.log('Successfully Renamed'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
-    // console.log('YMK in command delte-list');
   });
 
 // url: /tasks
 
 program
+  .command('*')
+  .action(function() {
+    program.outputHelp();
+  });
+
+program
   .parse(process.argv);
+
+// default goes to lists
+if (!process.argv.slice(2).length) {
+    var cli = new WunderCLI(nconf.get('Auth'));
+    var printer = new WunderPrinter();
+    cli.sync()
+      .then(printer.colorPrint)
+      .catch(function(err) { console.log('Failed: ' + err.message); });
+}
 
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai
