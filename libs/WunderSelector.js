@@ -8,8 +8,10 @@ Promise.promisifyAll(prompt);
 
 var WunderSelector = function() { };
 
-WunderSelector.prototype.selectLists = function(cli, filters) {
+WunderSelector.prototype.selectLists = function(cli, action, filters, confirm) {
   root = cli.root;
+  if (confirm === undefined)
+    confirm = true;
   filters = filters || { };
   root.wunderLists.forEach(function(l, i) {
     console.log(chalk.black.bgYellow(i + 1) + ' ' +
@@ -19,24 +21,28 @@ WunderSelector.prototype.selectLists = function(cli, filters) {
   return new Promise(function(resolve, reject) {
     prompt.message = 'Select'
     prompt.start();
-    prompt.getAsync(self.schemaNumberRange('Lists to delete'))
+    prompt.getAsync(self.schemaNumberRange('Lists to ' + action))
       .then(function(res) {
-        return self.confirmLists(self.parseNumberRange(res.lists, root.wunderLists));
+        var lobjs = self.parseNumberRange(res.lists, root.wunderLists);
+        if (confirm === true)
+          return self.confirmLists(action, lobjs);
+        else
+          return new Promise(function(res, rej) { res(lobjs); });
       })
       .then(function(lists) { resolve(lists); })
       .catch(function(err) { reject({ message: err }); });
   });
 };
 
-WunderSelector.prototype.confirmLists = function(lists) {
+WunderSelector.prototype.confirmLists = function(action, lists) {
   lists.forEach(function(l) {
-    console.log(chalk.black.bgYellow('D') + ' ' +
+    console.log(chalk.black.bgYellow('?') + ' ' +
                 chalk.bold.blue(l.obj.title + ' (' + l.wunderTasks.length + ')'));
   });
   var schema = {
     properties: {
       confirm: {
-        description: 'Sure to delete these lists(' + lists.length + ') ? [y/N]',
+        description: 'Sure to ' + action + ' these lists(' + lists.length + ') ? [y/N]',
         pattern: /^[YyNn]$/,
         message: 'y or n',
         default: 'n',

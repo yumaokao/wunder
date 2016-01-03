@@ -66,9 +66,24 @@ program
     var cli = new WunderCLI(nconf.get('Auth'));
     var sel = new WunderSelector();
     cli.sync()
-      .then(function(cli) { return sel.selectLists(cli, { 'lists': lists }); })
+      .then(function(cli) { return sel.selectLists(cli, 'delete', { 'lists': lists }); })
       .then(cli.deleteLists)
       .then(function() { console.log('Successfully Deleted'); })
+      .catch(function(err) { console.log('Failed: ' + err.message); });
+    // console.log('YMK in command delte-list');
+  });
+program
+  .command('rename-list [lists...]')
+  .alias('rl')
+  .description('Rename lists')
+  .action(function(lists) {
+    var cli = new WunderCLI(nconf.get('Auth'));
+    var sel = new WunderSelector();
+    cli.sync()
+      .then(function(cli) { return sel.selectLists(cli, 'rename', { 'lists': lists }, false); })
+      // .then(cli.deleteLists)
+      .then(function(ls) { console.log(ls); })
+      .then(function() { console.log('Successfully Renamed'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
     // console.log('YMK in command delte-list');
   });
