@@ -7,12 +7,26 @@ var prompt = require('prompt');
 Promise.promisifyAll(prompt);
 
 var WunderSelector = function() { };
-
+// -------------------------
+// Lists
+// -------------------------
 WunderSelector.prototype.selectDeleteLists = function(cli, filters) {
   return this.selectLists(cli, 'delete', filters);
 };
 WunderSelector.prototype.selectRenameLists = function(cli, filters) {
   return this.selectLists(cli, 'rename', filters);
+};
+WunderSelector.prototype.inputRenameTitle = function(lists, titles) {
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    if (lists.length < titles.length)
+      reject({ message: 'Too few lists selected' });
+    var adds = lists.slice(titles.length, lists.length);
+    Promise.all(adds.map(function(a) {
+        return prompt.getAsync(self.schemaNumberRange('AAA'));
+      }))
+      .then(function() {});
+  });
 };
 WunderSelector.prototype.confirmDeleteLists = function(lists) {
   lists.forEach(function(l) {

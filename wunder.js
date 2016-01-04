@@ -67,7 +67,7 @@ program
       .then(function(cli) { return sel.selectDeleteLists(cli, { 'lists': lists }); })
       .then(function(ls) { return sel.confirmDeleteLists(ls); })
       .then(cli.deleteLists)
-      .then(function(num) { console.log(num + 'Lists Successfully Deleted'); })
+      .then(function(num) { console.log(num + ' Lists Successfully Deleted'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
     // console.log('YMK in command delte-list');
   });
@@ -81,8 +81,9 @@ program
     var sel = new WunderSelector();
     cli.sync()
       .then(function(cli) { return sel.selectRenameLists(cli, { 'lists': lists }); })
-      .then(function(ls) { console.log(ls); })
-      .then(function(num) { console.log(num + 'Lists Successfully Renamed'); })
+      .then(function(ols) { return sel.inputRenameTitle(ols, options.titles); })
+      .then(function(ls) { console.log(ls); return 1; })
+      .then(function(num) { console.log(num + ' Lists Successfully Renamed'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
   });
 
