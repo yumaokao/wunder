@@ -37,6 +37,11 @@ Build Up
   $ npm install --save merge
   $ npm install --save prompt
 
+  # for mocha
+  $ sudo npm install -g mocha
+  $ sudo npm install --save chai
+
+  # auto install
   $ npm install
 
 
@@ -55,6 +60,7 @@ Todo
 * [$] 2015-12-21 ~ 2015-12-21 Configuration infrastructure
 * [$] 2015-12-21 ~ 2015-12-23 Error Handeling
 * [%] 2015-12-23 List adder, selector, deteler, renamer
+* [ ] 2015-12-29 Move tests to mocha test
 * [ ] 2015-12-29 Task adder, selector, deteler, renamer, updater, completer
 * [ ] 2015-12-23 Padding with padding configs
 * [ ] 2015-12-23 Auth to generate access token per user

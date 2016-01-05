@@ -14,6 +14,7 @@
   "dependencies": {
     "blessed": "^0.1.81",
     "bluebird": "^3.0.6",
+    "chai": "^3.4.1",
     "chalk": "^1.1.1",
     "commander": "^2.9.0",
     "merge": "^1.2.0",
