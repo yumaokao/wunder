@@ -40,6 +40,7 @@ Build Up
   # for mocha
   $ sudo npm install -g mocha
   $ sudo npm install --save chai
+  $ sudo npm install --save bdd-stdin
 
   # auto install
   $ npm install

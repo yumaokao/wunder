@@ -12,6 +12,7 @@
   "author": "yumaokao",
   "license": "ISC",
   "dependencies": {
+    "bdd-stdin": "^0.2.0",
     "blessed": "^0.1.81",
     "bluebird": "^3.0.6",
     "chai": "^3.4.1",
