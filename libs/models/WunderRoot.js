@@ -33,6 +33,10 @@ WunderRoot.prototype.lists = function() {
   });
 };
 
+WunderRoot.prototype.newList = function(title) {
+  return this.post('/lists', { 'title': title });
+};
+
 module.exports = WunderRoot;
 
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai

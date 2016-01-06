@@ -50,14 +50,9 @@ WunderCLI.prototype.sync = function() {
   });
 };
 
-WunderCLI.prototype.addList = function(nobj) {
-  // return this.root.post('/lists?title=' + encodeURIComponent(nobj.title));
-  return this.root.post('/lists', nobj);
-};
-
-WunderCLI.prototype.addLists = function(titles) {
-  // TODO
-  return this.root.post('/lists', nobj);
+WunderCLI.prototype.newLists = function(titles) {
+  var root = this.root;
+  return Promise.all(titles.map(function(t) { return root.newList(t); }));
 };
 
 WunderCLI.prototype.renameLists = function(lists, titles) {
