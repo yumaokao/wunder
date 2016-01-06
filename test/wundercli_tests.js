@@ -25,7 +25,7 @@ describe('WunderCLI', function() {
         // .then(function(cli) { done(new Error('a')); })
         .then(function(cli) {
           cli.should.have.property('root');
-          return cli.root.lists();
+          return cli.root.wunderLists;
         })
         .then(function(lists) {
           lists.length.should.be.equal(1);
@@ -38,9 +38,7 @@ describe('WunderCLI', function() {
 	  it('could not be deleted', function (done) {
       var cli = new WunderCLI(nconf.get('Auth'));
       cli.sync()
-        .then(function(cli) {
-          return cli.root.lists();
-        })
+        .then(function(cli) { return cli.root.wunderLists; })
         .then(function(lists) {
           lists.length.should.be.equal(1);
           lists[0].should.have.property('obj');
@@ -62,11 +60,13 @@ describe('WunderCLI', function() {
   });
 	describe('CRUD /list with [wunder test]', function () {
     var cli = new WunderCLI(nconf.get('Auth'));
-	  it('If exists, Delete [wunder test]', function (done) {
+	  it('If exists, Delete [wunder test] [wunder rename]', function (done) {
       cli.sync()
-        .then(function(cli) { return cli.root.lists(); })
+        .then(function(cli) { return cli.root.wunderLists; })
         .then(function(lists) {
-          var wls = lists.filter(function(l) { return l.obj.title === 'wunder test'; });
+          var wls = lists.filter(function(l) {
+            return l.obj.title === 'wunder test' || l.obj.title === 'wunder rename';
+          });
           return cli.deleteLists(wls);
         })
         .then(function(num) { done(); })
@@ -74,7 +74,7 @@ describe('WunderCLI', function() {
     });
 	  it('Create [wunder test]', function (done) {
       cli.sync()
-        .then(function(cli) { return cli.root.lists(); })
+        .then(function(cli) { return cli.root.wunderLists; })
         .then(function(lists) {
           lists.filter(function(l) { return l.obj.title === 'wunder test'; })
             .length.should.be.equal(0);
@@ -88,7 +88,7 @@ describe('WunderCLI', function() {
     });
 	  it('Read [wunder test]', function (done) {
       cli.sync()
-        .then(function(cli) { return cli.root.lists(); })
+        .then(function(cli) { return cli.root.wunderLists; })
         .then(function(lists) {
           lists.filter(function(l) { return l.obj.title === 'wunder test'; })
             .length.should.be.equal(1);
@@ -96,11 +96,25 @@ describe('WunderCLI', function() {
         })
         .catch(function(err) { done(err); });
     });
-	  it('Delete [wunder test]', function (done) {
+	  it('Update [wunder test] -> [wunder rename]', function (done) {
       cli.sync()
-        .then(function(cli) { return cli.root.lists(); })
+        .then(function(cli) { return cli.root.wunderLists; })
         .then(function(lists) {
+          var titles = [ 'wunder rename' ];
           var wls = lists.filter(function(l) { return l.obj.title === 'wunder test'; });
+          return cli.renameLists(wls, titles);
+        })
+        .then(function(num) {
+          num.length.should.be.equal(1);
+          done();
+        })
+        .catch(function(err) { done(err); });
+    });
+	  it('Delete [wunder rename]', function (done) {
+      cli.sync()
+        .then(function(cli) { return cli.root.wunderLists; })
+        .then(function(lists) {
+          var wls = lists.filter(function(l) { return l.obj.title === 'wunder rename'; });
           wls.length.should.be.equal(1);
           return cli.deleteLists(wls);
         })
@@ -110,11 +124,13 @@ describe('WunderCLI', function() {
         })
         .catch(function(err) { done(err); });
     });
-	  it('Read [wunder test] will be deleted', function (done) {
+	  it('Read [wunder rename] will be deleted', function (done) {
       cli.sync()
-        .then(function(cli) { return cli.root.lists(); })
+        .then(function(cli) { return cli.root.wunderLists; })
         .then(function(lists) {
           lists.filter(function(l) { return l.obj.title === 'wunder test'; })
+            .length.should.be.equal(0);
+          lists.filter(function(l) { return l.obj.title === 'wunder rename'; })
             .length.should.be.equal(0);
           done();
         })

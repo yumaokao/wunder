@@ -61,6 +61,25 @@ WunderAPI.prototype.post = function(aurl, nobj) {
   });
 };
 
+WunderAPI.prototype.patch = function(aurl, nobj) {
+  var wurl = this.baseURL + aurl;
+  var opts = merge({}, this.options);
+  opts.data = JSON.stringify(nobj);
+  var self = this;
+
+  return new Promise(function(resolve, reject) {
+    rest.patch(wurl, opts).on('complete', function(data, resp) {
+      // console.log("url response " + resp.statusCode);
+      if (resp.statusCode == 200) {
+        resolve(data);
+      } else {
+        var error = new WunderError(resp);
+        reject(error);
+      }
+    });
+  });
+};
+
 WunderAPI.prototype.del = function(aurl) {
   var wurl = this.baseURL + aurl;
   var opts = merge({}, this.options);

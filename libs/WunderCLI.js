@@ -55,6 +55,15 @@ WunderCLI.prototype.addList = function(nobj) {
   return this.root.post('/lists', nobj);
 };
 
+WunderCLI.prototype.addLists = function(titles) {
+  // TODO
+  return this.root.post('/lists', nobj);
+};
+
+WunderCLI.prototype.renameLists = function(lists, titles) {
+  return Promise.all(lists.map(function(l, i) { return l.rename(titles[i]); }));
+};
+
 WunderCLI.prototype.deleteLists = function(lists) {
   return Promise.all(lists.map(function(l) { return l.delete(); }));
 };

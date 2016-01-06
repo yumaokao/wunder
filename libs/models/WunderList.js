@@ -25,6 +25,11 @@ WunderList.prototype.delete = function() {
   return this.del('/lists/' + this.obj.id + '?revision=' + this.obj.revision);
 };
 
+WunderList.prototype.rename = function(title) {
+  return this.patch('/lists/' + this.obj.id,
+      { 'revision': this.obj.revision, 'title': title });
+};
+
 module.exports = WunderList;
 
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai
