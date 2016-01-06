@@ -13,8 +13,8 @@ var WunderSelector = require('./libs/WunderSelector');
 nconf.defaults({
   'Auth': {
     'baseURL': 'http://a.wunderlist.com/api/v1',
-    'accessToken': '93b7a581f3204d31128bb816f459a4842cceb460976e728f155c1b2ca63a',
-    'clientID': '6cca1923696f790a903d'
+    'accessToken': '5fb8cfbdf5ae233d59db89d3bef6aaa273171e42c638f6dbb2b4ad6cd6a5',
+    'clientID': '501cd26b0b953ee66cb2'
   }
 });
 

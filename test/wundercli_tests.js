@@ -9,17 +9,17 @@ var nconf = require('nconf');
 nconf.defaults({
   'Auth': {
     'baseURL': 'http://a.wunderlist.com/api/v1',
-    'accessToken': '93b7a581f3204d31128bb816f459a4842cceb460976e728f155c1b2ca63a',
-    'clientID': '6cca1923696f790a903d'
+    'accessToken': '5fb8cfbdf5ae233d59db89d3bef6aaa273171e42c638f6dbb2b4ad6cd6a5',
+    'clientID': '501cd26b0b953ee66cb2'
   }
 });
 
 var WunderCLI = require('../libs/WunderCLI');
 var WunderSelector = require('../libs/WunderSelector');
 describe('WunderCLI', function() {
-	describe('Should always has a list \'inbox\' at head', function () {
-	  it('should be wunderLists', function (done) {
-      this.timeout(30000);
+  this.timeout(30000);
+	describe('Should always have a list \'inbox\' at head', function () {
+	  it('should be have a title \'inbox\'', function (done) {
       var cli = new WunderCLI(nconf.get('Auth'));
       cli.sync()
         // .then(function(cli) { done(new Error('a')); })
@@ -35,13 +35,15 @@ describe('WunderCLI', function() {
         })
         .catch(function(err) { done(err); });
     });
+	  it('should be have a title ', function (done) {
+    });
   });
 });
 
 describe('WunderSelector', function() {
+  this.timeout(30000);
 	describe('Select a list to delete', function () {
 	  it('input [1] should be \'inbox\'', function (done) {
-      this.timeout(30000);
       var cli = new WunderCLI(nconf.get('Auth'));
       var sel = new WunderSelector();
       cli.sync()
