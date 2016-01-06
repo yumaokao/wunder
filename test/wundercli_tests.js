@@ -28,14 +28,97 @@ describe('WunderCLI', function() {
           return cli.root.lists();
         })
         .then(function(lists) {
-          lists.length.should.be.at.least(1);
+          lists.length.should.be.equal(1);
           lists[0].should.have.property('obj');
           lists[0].obj.should.have.property('title').to.be.equal('inbox');
           done();
         })
         .catch(function(err) { done(err); });
     });
-	  it('should be have a title ', function (done) {
+	  it('could not be deleted', function (done) {
+      var cli = new WunderCLI(nconf.get('Auth'));
+      cli.sync()
+        .then(function(cli) {
+          return cli.root.lists();
+        })
+        .then(function(lists) {
+          lists.length.should.be.equal(1);
+          lists[0].should.have.property('obj');
+          lists[0].obj.should.have.property('title').to.be.equal('inbox');
+          return cli.deleteLists(lists);
+        })
+        .then(function(num) {
+          num.should.be.equal(0);
+          done();
+        })
+        .catch(function(err) {
+          err.should.have.property('code').to.be.equal(422);
+          done();
+        });
+    });
+	  it('[TODO] could not be renamed', function (done) {
+      done();
+    });
+  });
+	describe('CRUD /list with [wunder test]', function () {
+    var cli = new WunderCLI(nconf.get('Auth'));
+	  it('If exists, Delete [wunder test]', function (done) {
+      cli.sync()
+        .then(function(cli) { return cli.root.lists(); })
+        .then(function(lists) {
+          var wls = lists.filter(function(l) { return l.obj.title === 'wunder test'; });
+          return cli.deleteLists(wls);
+        })
+        .then(function(num) { done(); })
+        .catch(function(err) { done(err); });
+    });
+	  it('Create [wunder test]', function (done) {
+      cli.sync()
+        .then(function(cli) { return cli.root.lists(); })
+        .then(function(lists) {
+          lists.filter(function(l) { return l.obj.title === 'wunder test'; })
+            .length.should.be.equal(0);
+          return cli.addList({ 'title': 'wunder test' })
+        })
+        .then(function(data) {
+          data.title.should.be.equal('wunder test');
+          done();
+        })
+        .catch(function(err) { done(err); });
+    });
+	  it('Read [wunder test]', function (done) {
+      cli.sync()
+        .then(function(cli) { return cli.root.lists(); })
+        .then(function(lists) {
+          lists.filter(function(l) { return l.obj.title === 'wunder test'; })
+            .length.should.be.equal(1);
+          done();
+        })
+        .catch(function(err) { done(err); });
+    });
+	  it('Delete [wunder test]', function (done) {
+      cli.sync()
+        .then(function(cli) { return cli.root.lists(); })
+        .then(function(lists) {
+          var wls = lists.filter(function(l) { return l.obj.title === 'wunder test'; });
+          wls.length.should.be.equal(1);
+          return cli.deleteLists(wls);
+        })
+        .then(function(num) {
+          num.length.should.be.equal(1);
+          done();
+        })
+        .catch(function(err) { done(err); });
+    });
+	  it('Read [wunder test] will be deleted', function (done) {
+      cli.sync()
+        .then(function(cli) { return cli.root.lists(); })
+        .then(function(lists) {
+          lists.filter(function(l) { return l.obj.title === 'wunder test'; })
+            .length.should.be.equal(0);
+          done();
+        })
+        .catch(function(err) { done(err); });
     });
   });
 });
