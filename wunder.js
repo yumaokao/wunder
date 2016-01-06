@@ -47,13 +47,13 @@ program
 
 // url: /lists
 program
-  .command('new-list <title>')
+  .command('new-lists <titles...>')
   .alias('nl')
-  .description('New a list')
-  .action(function(title) {
+  .description('New lists')
+  .action(function(titles) {
     var cli = new WunderCLI(nconf.get('Auth'));
-    cli.addList({ 'title': title })
-      .then(function() { console.log('Successfully Added'); })
+    cli.newLists(titles)
+      .then(function(res) { console.log(res.length + ' Lists Successfully Created'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
   });
 program
@@ -67,7 +67,7 @@ program
       .then(function(cli) { return sel.selectDeleteLists(cli, { 'lists': lists }); })
       .then(function(ls) { return sel.confirmDeleteLists(ls); })
       .then(cli.deleteLists)
-      .then(function(num) { console.log(num + ' Lists Successfully Deleted'); })
+      .then(function(res) { console.log(res.length + ' Lists Successfully Deleted'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
     // console.log('YMK in command delte-list');
   });
@@ -81,7 +81,7 @@ program
     var sel = new WunderSelector();
     cli.sync()
       .then(function(cli) { return sel.selectRenameLists(cli, { 'lists': lists }); })
-      .then(function(ols) { return sel.inputRenameTitle(ols, options.titles); })
+      .then(function(ols) { return sel.inputRenameTitles(ols, options.titles); })
       .then(function(ls) { console.log(ls); return 1; })
       .then(function(num) { console.log(num + ' Lists Successfully Renamed'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
