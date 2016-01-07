@@ -10,6 +10,12 @@ var WunderSelector = function() { };
 // -------------------------
 // Lists
 // -------------------------
+WunderSelector.prototype.selectListLists = function(cli, filters) {
+  if (filters !== undefined && filters.lists !== undefined
+      && Array.isArray(filters.lists) && filters.lists.length === 0)
+    return cli.root.wunderLists;
+  return this.selectLists(cli, 'list', filters);
+};
 WunderSelector.prototype.selectDeleteLists = function(cli, filters) {
   return this.selectLists(cli, 'delete', filters);
 };
@@ -45,9 +51,13 @@ WunderSelector.prototype.confirmDeleteLists = function(lists) {
 
 WunderSelector.prototype.selectLists = function(cli, action, filters) {
   root = cli.root;
-  // if (confirm === undefined)
-  //   confirm = true;
-  filters = filters || { };
+  // if user specific, return matched/filtered lists
+  if (filters !== undefined && filters.lists !== undefined
+      && Array.isArray(filters.lists) && filters.lists.length > 0)
+    return root.wunderLists.filter(function(l) {
+      return filters.lists.indexOf(l.obj.title) !== -1;
+    });
+
   root.wunderLists.forEach(function(l, i) {
     console.log(chalk.black.bgYellow(i + 1) + ' ' +
                 chalk.bold.blue(l.obj.title + ' (' + l.wunderTasks.length + ')'));

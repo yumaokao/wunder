@@ -39,8 +39,10 @@ program
   .description('List all lists and tasks with filters')
   .action(function(lists) {
     var cli = new WunderCLI(nconf.get('Auth'));
+    var sel = new WunderSelector();
     var printer = new WunderPrinter();
     cli.sync()
+      .then(function(cli) { return sel.selectListLists(cli, { 'lists': lists }); })
       .then(printer.colorPrint)
       .catch(function(err) { console.log('Failed: ' + err.message); });
   });

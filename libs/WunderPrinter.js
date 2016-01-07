@@ -7,9 +7,8 @@ var repeat = require('string.prototype.repeat');
 var WunderPrinter = function() {
 };
 
-WunderPrinter.prototype.colorPrint = function(cli) {
-  root = cli.root;
-  root.wunderLists.forEach(function(l) {
+WunderPrinter.prototype.colorPrint = function(lists) {
+  lists.forEach(function(l) {
     console.log(chalk.bold.blue(l.obj.title + ' (' + l.wunderTasks.length + ')'));
     l.wunderTasks.forEach(function(t) {
       // console.log('wunderNotes ' + t.wunderNotes.length);
