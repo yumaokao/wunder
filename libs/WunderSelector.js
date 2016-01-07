@@ -22,10 +22,17 @@ WunderSelector.prototype.inputRenameTitles = function(lists, titles) {
     if (lists.length < titles.length)
       reject({ message: 'Too few lists selected' });
     var adds = lists.slice(titles.length, lists.length);
-    Promise.all(adds.map(function(a) {
-        return prompt.getAsync(self.schemaNumberRange('AAA'));
-      }))
-      .then(function() {});
+    Promise.each(adds, function(a) {
+        return prompt.getAsync(self.schemaString('Which title to rename [' + a.obj.title + '] ?'))
+          .then(function(res) {
+            return titles.push(res.string); });
+      })
+      .then(function() {
+        if (lists.length !== titles.length)
+          reject({ message: 'Not enough titles to rename' })
+        resolve({ 'lists': lists, 'titles': titles });
+      })
+      .catch(function(err) { reject({ message: err }); });
   });
 };
 WunderSelector.prototype.confirmDeleteLists = function(lists) {
@@ -50,7 +57,7 @@ WunderSelector.prototype.selectLists = function(cli, action, filters) {
     prompt.message = 'Select'
     prompt.start();
     prompt.getAsync(self.schemaNumberRange('Lists to ' + action))
-      .then(function(res) { resolve(self.parseNumberRange(res.lists, root.wunderLists)); })
+      .then(function(res) { resolve(self.parseNumberRange(res.range, root.wunderLists)); })
       .catch(function(err) { reject({ message: err }); });
   });
 };
@@ -79,10 +86,22 @@ WunderSelector.prototype.confirmLists = function(action, lists) {
 WunderSelector.prototype.schemaNumberRange = function(act) {
   return {
     properties: {
-      lists: {
+      range: {
         description: act + ' (e.g. 1,2,3-4)',
         pattern: /^[\d,\-\s]+$/,
         message: 'Numbers only (e.g. 1,2, 3,4-5)',
+        required: true
+      }
+    }
+  };
+};
+
+WunderSelector.prototype.schemaString = function(act) {
+  return {
+    properties: {
+      string: {
+        description: act,
+        message: 'Any character should be OK',
         required: true
       }
     }

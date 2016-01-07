@@ -82,8 +82,8 @@ program
     cli.sync()
       .then(function(cli) { return sel.selectRenameLists(cli, { 'lists': lists }); })
       .then(function(ols) { return sel.inputRenameTitles(ols, options.titles); })
-      .then(function(ls) { console.log(ls); return 1; })
-      .then(function(num) { console.log(num + ' Lists Successfully Renamed'); })
+      .then(function(obj) { return cli.renameLists(obj.lists, obj.titles); })
+      .then(function(res) { console.log(res.length + ' Lists Successfully Renamed'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
   });
 

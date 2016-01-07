@@ -18,7 +18,7 @@ WunderCLI.prototype.sync = function() {
   return new Promise(function(resolve, reject) {
     self.root.lists()
       .then(function(lists) {
-        return Promise.all(lists.map(function(l) { return l.tasks(); }));
+        return Promise.map(lists, function(l) { return l.tasks(); });
       })
       .then(function() {
         var tasks = [].concat.apply([], self.root.wunderLists.map(function(l) { return l.wunderTasks; }));
@@ -52,15 +52,16 @@ WunderCLI.prototype.sync = function() {
 
 WunderCLI.prototype.newLists = function(titles) {
   var root = this.root;
-  return Promise.all(titles.map(function(t) { return root.newList(t); }));
+  return Promise.map(titles, function(t) { return root.newList(t); });
 };
 
 WunderCLI.prototype.renameLists = function(lists, titles) {
-  return Promise.all(lists.map(function(l, i) { return l.rename(titles[i]); }));
+  // return Promise.all(lists.map(function(l, i) { return l.rename(titles[i]); }));
+  return Promise.map(lists, function(l, i) { return l.rename(titles[i]); });
 };
 
 WunderCLI.prototype.deleteLists = function(lists) {
-  return Promise.all(lists.map(function(l) { return l.delete(); }));
+  return Promise.map(lists, function(l) { return l.delete(); });
 };
 
 module.exports = WunderCLI;
