@@ -36,6 +36,7 @@ Build Up
   $ npm install --save nconf
   $ npm install --save merge
   $ npm install --save prompt
+  $ npm install --save minimatch
 
   # for mocha
   $ sudo npm install -g mocha
