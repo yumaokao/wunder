@@ -225,46 +225,25 @@ describe('WunderSelector', function() {
 	describe('parseNumberRange', function () {
     var sel = new WunderSelector();
     var objs = ['I', 'II' , 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
-	  it('1,', function (done) {
-      var res = sel.parseNumberRange('1,', objs);
-      JSON.stringify(res).should.be.equal(JSON.stringify(['I']));
-      done();
-    });
-	  it('1, 2', function (done) {
-      var res = sel.parseNumberRange('1, 2', objs);
-      JSON.stringify(res).should.be.equal(JSON.stringify(['I', 'II']));
-      done();
-    });
-	  it('-1, 2', function (done) {
-      var res = sel.parseNumberRange('-1, 2', objs);
-      JSON.stringify(res).should.be.equal(JSON.stringify(['II']));
-      done();
-    });
-	  it('-1, -2', function (done) {
-      var res = sel.parseNumberRange('-1, -2', objs);
-      JSON.stringify(res).should.be.equal(JSON.stringify([]));
-      done();
-    });
-	  it('1, 1', function (done) {
-      var res = sel.parseNumberRange('1, 1', objs);
-      JSON.stringify(res).should.be.equal(JSON.stringify(['I']));
-      done();
-    });
-	  it('2-3-5', function (done) {
-      var res = sel.parseNumberRange('2-3-5', objs);
-      JSON.stringify(res).should.be.equal(JSON.stringify(['II', 'III', 'IV', 'V']));
-      done();
-    });
-	  it('1,2, 3, 5 - 7', function (done) {
-      var res = sel.parseNumberRange('1,2, 3, 5 - 7', objs);
-      JSON.stringify(res).should.be.equal(JSON.stringify(['I', 'II', 'III', 'V', 'VI', 'VII']));
-      done();
-    });
-	  it('1,2, 3, 5 - 11', function (done) {
-      var res = sel.parseNumberRange('1,2, 3, 5 - 11', objs);
-      JSON.stringify(res).should.be.equal(JSON.stringify(['I', 'II', 'III', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']));
-      done();
-    });
+    var pairs = [ { test: '1,', result: ['I'] },
+                  { test: '1, 2', result: ['I', 'II'] },
+                  { test: '-1, 2', result: ['II'] },
+                  { test: '-1, -2', result: [] },
+                  { test: '1, 1', result: ['I'] },
+                  { test: '2-3-5', result: ['II', 'III', 'IV', 'V'] },
+                  { test: '1,2, 3, 5 - 7', result: ['I', 'II', 'III', 'V', 'VI', 'VII'] },
+                  { test: '1,2, 3, 5 - 11', result: ['I', 'II', 'III', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] }
+                ];
+    function verifier(pair) {
+      function v(done) {
+        var res = sel.parseNumberRange(pair.test, objs);
+        JSON.stringify(res).should.be.equal(JSON.stringify(pair.result));
+        done();
+      }
+      return v;
+    }
+    it(pairs[0].test, verifier(pairs[0]));
+    pairs.forEach(function(p) { it(p.test, verifier(p)); });
   });
 	describe('Select a list to delete', function () {
 	  it('input [1] should be \'inbox\'', function (done) {
