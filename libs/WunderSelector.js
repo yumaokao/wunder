@@ -2,6 +2,7 @@
 
 var Promise = require('bluebird');
 var chalk = require('chalk');
+var minimatch = require('minimatch');
 var repeat = require('string.prototype.repeat');
 var prompt = require('prompt');
 Promise.promisifyAll(prompt);
@@ -55,7 +56,13 @@ WunderSelector.prototype.selectLists = function(cli, action, filters) {
   if (filters !== undefined && filters.lists !== undefined
       && Array.isArray(filters.lists) && filters.lists.length > 0)
     return root.wunderLists.filter(function(l) {
-      return filters.lists.indexOf(l.obj.title) !== -1;
+      // Use wildcard/minimatch
+      return filters.lists.filter(function(f) {
+        // console.log(JSON.stringify(f));
+        // console.log(f + ' ' + l.obj.title + ' -> ' + minimatch(l.obj.title, f));
+        return minimatch(l.obj.title, f);
+      }).length !== 0;
+      // return filters.lists.indexOf(l.obj.title) !== -1;
     });
 
   root.wunderLists.forEach(function(l, i) {

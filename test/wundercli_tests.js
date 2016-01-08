@@ -244,7 +244,7 @@ describe('WunderSelector', function() {
     }
     pairs.forEach(function(p) { it(p.test, verifier(p)); });
   });
-	describe('minimatch', function () {
+	describe('minimatch normal', function () {
     var minimatch = require('minimatch');
     var objs = ['I', 'II' , 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
     var pairs = [ { test: 'I', result: ['I'] },
@@ -258,6 +258,29 @@ describe('WunderSelector', function() {
                   { test: '*V*', result: ['IV', 'V', 'VI', 'VII', 'VIII'] },
                   { test: '?(I)V?(I)', result: ['IV', 'V', 'VI'] },
                   { test: '?(I)V?(I|X)', result: ['IV', 'V', 'VI'] }
+                ];
+    function verifier(pair) {
+      function v(done) {
+        var res = objs.filter(minimatch.filter(pair.test));
+        JSON.stringify(res).should.be.equal(JSON.stringify(pair.result));
+        done();
+      }
+      return v;
+    }
+    pairs.forEach(function(p) { it(p.test, verifier(p)); });
+  });
+	describe('minimatch escape', function () {
+    var minimatch = require('minimatch');
+    var objs = ['I', 'I?' , 'I+', 'I|', 'I*', 'I(V)', 'I+(?*)', 'I+(?|*)', 'IV', 'IX'];
+    var pairs = [ { test: 'I', result: ['I'] },
+                  { test: 'I?', result: ['I?', 'I+', 'I|', 'I*', 'IV', 'IX'] },
+                  { test: 'I\\?', result: ['I?'] },
+                  { test: 'I\\*', result: ['I*'] },
+                  { test: 'I\\|', result: ['I|'] },
+                  { test: '*\\**', result: ['I*', 'I+(?*)', 'I+(?|*)'] },
+                  { test: 'I(V)', result: ['I(V)'] },
+                  { test: 'I\\+(\\?\\*)', result: ['I+(?*)'] },
+                  { test: 'I\\+(\\?\\|\\*)', result: ['I+(?|*)'] }
                 ];
     function verifier(pair) {
       function v(done) {
