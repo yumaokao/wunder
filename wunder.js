@@ -2,6 +2,7 @@
 
 'use strict';
 
+var path = require('path');
 var program = require('commander');
 var pkg = require('./package');
 var nconf = require('nconf');
@@ -9,6 +10,9 @@ var WunderCLI = require('./libs/WunderCLI');
 var WunderPrinter = require('./libs/WunderPrinter');
 var WunderSelector = require('./libs/WunderSelector');
 
+// search ./.config/wunder.json, ~/.config/wunder.json configs
+nconf.file({ file: path.join(process.env.PWD, '/.config/', path.basename(process.argv[1], '.js') + '.json'), search: true });
+nconf.file({ file: path.join(process.env.HOME, '/.config/', path.basename(process.argv[1], '.js') + '.json'), search: true  });
 // Default configurations
 nconf.defaults({
   'Auth': {
@@ -17,6 +21,7 @@ nconf.defaults({
     'clientID': '501cd26b0b953ee66cb2'
   }
 });
+console.log(nconf.get('Auth'));
 
 program
   .version(pkg.version)
@@ -105,6 +110,7 @@ if (!process.argv.slice(2).length) {
     var cli = new WunderCLI(nconf.get('Auth'));
     var printer = new WunderPrinter();
     cli.sync()
+      .then(function(cli) { return cli.root.wunderLists; })
       .then(printer.colorPrint)
       .catch(function(err) { console.log('Failed: ' + err.message); });
 }
