@@ -54,7 +54,7 @@ describe('WunderCLI', function() {
           done();
         });
     });
-	  it('[TODO] could not be renamed', function (done) {
+	  it.skip('could not be renamed', function (done) {
       done();
     });
   });
