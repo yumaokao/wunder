@@ -5,22 +5,17 @@ var stdin = require('bdd-stdin');
 // var chaiAsPromised = require("chai-as-promised");
 // chai.use(chaiAsPromised);
 
-var nconf = require('nconf');
-nconf.defaults({
-  'Auth': {
-    'baseURL': 'http://a.wunderlist.com/api/v1',
-    'accessToken': '5fb8cfbdf5ae233d59db89d3bef6aaa273171e42c638f6dbb2b4ad6cd6a5',
-    'clientID': '501cd26b0b953ee66cb2'
-  }
-});
 
 var WunderCLI = require('../libs/WunderCLI');
 var WunderSelector = require('../libs/WunderSelector');
+var WunderConfig = require('../libs/WunderConfig');
+var conf = new WunderConfig();
+
 describe('WunderCLI', function() {
   this.timeout(30000);
 	describe('Should always have a list \'inbox\' at head', function () {
 	  it('should be have a title \'inbox\'', function (done) {
-      var cli = new WunderCLI(nconf.get('Auth'));
+      var cli = new WunderCLI(conf.get('Auth'));
       cli.sync()
         // .then(function(cli) { done(new Error('a')); })
         .then(function(cli) {
@@ -36,7 +31,7 @@ describe('WunderCLI', function() {
         .catch(function(err) { done(err); });
     });
 	  it('could not be deleted', function (done) {
-      var cli = new WunderCLI(nconf.get('Auth'));
+      var cli = new WunderCLI(conf.get('Auth'));
       cli.sync()
         .then(function(cli) { return cli.root.wunderLists; })
         .then(function(lists) {
@@ -59,7 +54,7 @@ describe('WunderCLI', function() {
     });
   });
 	describe('CRUD /list with a single [wunder test]', function () {
-    var cli = new WunderCLI(nconf.get('Auth'));
+    var cli = new WunderCLI(conf.get('Auth'));
 	  it('If exists, Delete [wunder test] [wunder rename]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.root.wunderLists; })
@@ -143,7 +138,7 @@ describe('WunderCLI', function() {
     var lasts = [ 'crud_lists_0', 'crud_lists_1', 'crud_lists_2' , 'crud_lists_3' ];
     var clsts = lasts.slice(0, 2);
     var ulsts = lasts.slice(2, 4);
-    var cli = new WunderCLI(nconf.get('Auth'));
+    var cli = new WunderCLI(conf.get('Auth'));
 	  it('If exists, Delete [ crud_lists_* ', function (done) {
       cli.sync()
         .then(function(cli) { return cli.root.wunderLists; })
@@ -294,7 +289,7 @@ describe('WunderSelector', function() {
   });
 	describe('Select a list to delete', function () {
 	  it('input [1] should be \'inbox\'', function (done) {
-      var cli = new WunderCLI(nconf.get('Auth'));
+      var cli = new WunderCLI(conf.get('Auth'));
       var sel = new WunderSelector();
       cli.sync()
         .then(function(cli) {

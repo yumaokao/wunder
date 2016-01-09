@@ -1,8 +1,8 @@
 'use strict';
 
+var fs = require('fs');
 var convict = require('convict');
-
-var WunderConfig = convict({
+var schema = {
   Auth: {
     baseURL: {
       format: String,
@@ -10,22 +10,38 @@ var WunderConfig = convict({
       default: 'http://a.wunderlist.com/api/v1'
     },
     accessToken: {
-      format: String,
+      format: function (val) { if (!/^[a-f0-9]{60}$/.test(val)) {
+        throw new Error('should be a 60 character hex string'); }},
       doc: 'Access Token for user',
       default: '5fb8cfbdf5ae233d59db89d3bef6aaa273171e42c638f6dbb2b4ad6cd6a5'
     },
     clientID: {
-      format: String,
+      format: function (val) { if (!/^[a-f0-9]{20}$/.test(val)) {
+        throw new Error('should be a 20 character hex string'); }},
       doc: 'Application Client ID',
       default: '501cd26b0b953ee66cb2'
     }
   }
-});
+};
 
-// search ./.config/wunder.json, ~/.config/wunder.json configs
-// nconf.file({ file: path.join(process.env.PWD, '/.config/', path.basename(process.argv[1], '.js') + '.json'), search: true });
-// nconf.file({ file: path.join(process.env.HOME, '/.config/', path.basename(process.argv[1], '.js') + '.json'), search: true  });
-// console.log(process.argv[1]);
+var WunderConfig = function(paths) {
+  if (paths === undefined)
+    paths = [];
+  this.conf = convict(schema);
+  this.conf.loadFile(paths.filter(function(p) {
+    try {
+      return fs.statSync(p).isFile();
+    } catch (err) { return false; } }));
+  this.conf.validate();
+};
+
+WunderConfig.prototype.get = function(param) {
+  return this.conf.get(param)
+};
+
+WunderConfig.prototype.validate = function(param) {
+  return this.conf.validate(param);
+};
 
 module.exports = WunderConfig;
 

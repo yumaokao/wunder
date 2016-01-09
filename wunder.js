@@ -2,26 +2,31 @@
 
 'use strict';
 
+var fs = require('fs');
 var path = require('path');
 var program = require('commander');
 var pkg = require('./package');
-var nconf = require('nconf');
 var WunderCLI = require('./libs/WunderCLI');
 var WunderPrinter = require('./libs/WunderPrinter');
 var WunderSelector = require('./libs/WunderSelector');
+var WunderConfig = require('./libs/WunderConfig');
 
-// search ./.config/wunder.json, ~/.config/wunder.json configs
-nconf.file({ file: path.join(process.env.PWD, '/.config/', path.basename(process.argv[1], '.js') + '.json'), search: true });
-nconf.file({ file: path.join(process.env.HOME, '/.config/', path.basename(process.argv[1], '.js') + '.json'), search: true  });
-// Default configurations
-nconf.defaults({
-  'Auth': {
-    'baseURL': 'http://a.wunderlist.com/api/v1',
-    'accessToken': '5fb8cfbdf5ae233d59db89d3bef6aaa273171e42c638f6dbb2b4ad6cd6a5',
-    'clientID': '501cd26b0b953ee66cb2'
+
+var loadProgramConfigs = function(paths) {
+  var configPaths = [ path.join(process.env.PWD, '/.config/', pkg.name + '.json'),
+                      path.join(process.env.HOME, '/.config/', pkg.name + 'json') ];
+  paths = paths.filter(function(p) { return p !== undefined; });
+  paths = paths.map(function(p) { return path.join(p, pkg.name + '.json'); });
+  var conf;
+  try {
+    conf = new WunderConfig(configPaths.concat(paths));
+  } catch(error)  {
+    console.log('Failed: Configuration ' + error);
+    process.exit();
   }
-});
-console.log(nconf.get('Auth'));
+  return conf;
+};
+
 
 program
   .version(pkg.version)
@@ -33,8 +38,8 @@ program
   .description('[TODO] Auth wunder')
   .action(function() {
     console.log('YMK in command program.conf ' + program.conf);
-    console.log(nconf.get('Auth'));
-    // nconf.file();
+    console.log(WunderConfig.get('Auth'));
+    // WunderConfig.file();
   });
 
 // [list]
@@ -43,7 +48,8 @@ program
   .alias('ls')
   .description('List all lists and tasks with filters')
   .action(function(lists) {
-    var cli = new WunderCLI(nconf.get('Auth'));
+    var conf = loadProgramConfigs([ program.conf ]);
+    var cli = new WunderCLI(conf.get('Auth'));
     var sel = new WunderSelector();
     var printer = new WunderPrinter();
     cli.sync()
@@ -58,7 +64,8 @@ program
   .alias('nl')
   .description('New lists')
   .action(function(titles) {
-    var cli = new WunderCLI(nconf.get('Auth'));
+    var conf = loadProgramConfigs([ program.conf ]);
+    var cli = new WunderCLI(conf.get('Auth'));
     cli.newLists(titles)
       .then(function(res) { console.log(res.length + ' Lists Successfully Created'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
@@ -68,7 +75,8 @@ program
   .alias('dl')
   .description('Delete lists')
   .action(function(lists) {
-    var cli = new WunderCLI(nconf.get('Auth'));
+    var conf = loadProgramConfigs([ program.conf ]);
+    var cli = new WunderCLI(conf.get('Auth'));
     var sel = new WunderSelector();
     cli.sync()
       .then(function(cli) { return sel.selectDeleteLists(cli, { 'lists': lists }); })
@@ -84,7 +92,8 @@ program
   .description('Rename lists')
   .option('-t, --titles [title]', 'New titles in order', function(v, t) { t.push(v); return t; }, [])
   .action(function(lists, options) {
-    var cli = new WunderCLI(nconf.get('Auth'));
+    var conf = loadProgramConfigs([ program.conf ]);
+    var cli = new WunderCLI(conf.get('Auth'));
     var sel = new WunderSelector();
     cli.sync()
       .then(function(cli) { return sel.selectRenameLists(cli, { 'lists': lists }); })
@@ -107,7 +116,8 @@ program
 
 // default goes to lists
 if (!process.argv.slice(2).length) {
-    var cli = new WunderCLI(nconf.get('Auth'));
+    var conf = loadProgramConfigs([ program.conf ]);
+    var cli = new WunderCLI(conf.get('Auth'));
     var printer = new WunderPrinter();
     cli.sync()
       .then(function(cli) { return cli.root.wunderLists; })

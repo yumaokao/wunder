@@ -21,7 +21,6 @@
     "convict": "^1.0.2",
     "merge": "^1.2.0",
     "minimatch": "^3.0.0",
-    "nconf": "^0.8.2",
     "prompt": "^0.2.14",
     "restler": "^3.4.0",
     "string.prototype.repeat": "^0.2.0"

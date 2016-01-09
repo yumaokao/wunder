@@ -27,7 +27,8 @@ var schema = {
 };
 
 describe('WunderConfig', function() {
-	describe('Default values', function () {
+  var WunderConfig = require('../libs/WunderConfig');
+	describe('Class convict', function () {
 	  it('Auth', function (done) {
       var conf = convict(schema);
       conf.validate({ strict: true });
@@ -70,8 +71,10 @@ describe('WunderConfig', function() {
         'clientID': '0123456789abcdefcf02' }));
       done();
     });
-	  it('class WunderConfig', function (done) {
-      var conf = require('../libs/WunderConfig');
+  });
+	describe('Class WunderConfig', function () {
+	  it('default values', function (done) {
+      var conf = new WunderConfig();
       conf.validate({ strict: true });
       JSON.stringify(conf.get('Auth')).should.be.equal(JSON.stringify({
         'baseURL': 'http://a.wunderlist.com/api/v1',
@@ -79,13 +82,13 @@ describe('WunderConfig', function() {
         'clientID': '501cd26b0b953ee66cb2' }));
       done();
     });
-	  it('class WunderConfig', function (done) {
-      var conf = require('../libs/WunderConfig');
+	  it('class WunderConfig with \'config2.json\'', function (done) {
+      var conf = new WunderConfig([ process.cwd() + '/test/config2.json' ]);
       conf.validate({ strict: true });
       JSON.stringify(conf.get('Auth')).should.be.equal(JSON.stringify({
         'baseURL': 'http://a.wunderlist.com/api/v1',
         'accessToken': '5fb8cfbdf5ae233d59db89d3bef6aaa273171e42c638f6dbb2b4ad6cd6a5',
-        'clientID': '501cd26b0b953ee66cb2' }));
+        'clientID': '0123456789abcdefcf02' }));
       done();
     });
   });
