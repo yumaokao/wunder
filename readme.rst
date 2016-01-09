@@ -65,8 +65,9 @@ Todo
 * [$] 2015-12-23 ~ 2016-01-09 List adder, selector, deteler, renamer
 * [$] 2015-12-29 ~ 2016-01-09 Move tests to mocha test
 * [$] 2015-12-23 ~ 2016-01-09 lists match with wildcard
+* [$] 2015-12-23 ~ 2016-01-10 test account
+* [$] 2015-12-23 ~ 2016-01-10 config directories
 * [ ] 2015-12-29 Task adder, selector, deteler, renamer, updater, completer
-* [ ] 2015-12-23 Padding with padding configs
 * [ ] 2015-12-23 Auth to generate access token per user
 * [ ] 2015-12-23 Refactor WunderAPI.js
 * [ ] 2015-12-14 Model with local cache with version
