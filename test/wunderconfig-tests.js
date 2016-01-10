@@ -45,13 +45,13 @@ describe('WunderConfig', function() {
     });
 	  it('configuration not valid file \'config0.json\'', function (done) {
       var conf = convict(schema);
-      conf.loadFile(process.cwd() + '/test/config0.json');
+      conf.loadFile(process.cwd() + '/test/configs/config0.json');
       expect(function() { conf.validate({ strict: true }); }).to.throw();
       done();
     });
 	  it('configuration one valid file \'config1.json\'', function (done) {
       var conf = convict(schema);
-      conf.loadFile(process.cwd() + '/test/config1.json');
+      conf.loadFile(process.cwd() + '/test/configs/config1.json');
       // expect(function() { conf.validate({ strict: true }); }).to.not.throw();
       conf.validate({ strict: true });
       JSON.stringify(conf.get('Auth')).should.be.equal(JSON.stringify({
@@ -62,8 +62,8 @@ describe('WunderConfig', function() {
     });
 	  it('configuration two file \'config1.json\', \'config2.json\'', function (done) {
       var conf = convict(schema);
-      conf.loadFile([ process.cwd() + '/test/config1.json',
-                      process.cwd() + '/test/config2.json' ]);
+      conf.loadFile([ process.cwd() + '/test/configs/config1.json',
+                      process.cwd() + '/test/configs/config2.json' ]);
       expect(function() { conf.validate({ strict: true }); }).to.not.throw();
       JSON.stringify(conf.get('Auth')).should.be.equal(JSON.stringify({
         'baseURL': 'http://a.wunderlist.com/api/v1',
@@ -83,7 +83,7 @@ describe('WunderConfig', function() {
       done();
     });
 	  it('class WunderConfig with \'config2.json\'', function (done) {
-      var conf = new WunderConfig([ process.cwd() + '/test/config2.json' ]);
+      var conf = new WunderConfig([ process.cwd() + '/test/configs/config2.json' ]);
       conf.validate({ strict: true });
       JSON.stringify(conf.get('Auth')).should.be.equal(JSON.stringify({
         'baseURL': 'http://a.wunderlist.com/api/v1',

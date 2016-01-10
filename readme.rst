@@ -38,6 +38,7 @@ Build Up
   $ npm install --save prompt
   $ npm install --save minimatch
   $ npm install --save convict
+  $ npm install --save rimraf
 
   # for mocha
   $ sudo npm install -g mocha
