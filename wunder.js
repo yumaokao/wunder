@@ -120,7 +120,7 @@ if (!process.argv.slice(2).length) {
     var cli = new WunderCLI(conf.get('Auth'));
     var printer = new WunderPrinter();
     cli.sync()
-      .then(function(cli) { return cli.root.wunderLists; })
+      .then(function(cli) { return cli.wunderRoot.wunderLists; })
       .then(printer.colorPrint)
       .catch(function(err) { console.log('Failed: ' + err.message); });
 }

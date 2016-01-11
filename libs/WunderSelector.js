@@ -14,7 +14,7 @@ var WunderSelector = function() { };
 WunderSelector.prototype.selectListLists = function(cli, filters) {
   if (filters !== undefined && filters.lists !== undefined
       && Array.isArray(filters.lists) && filters.lists.length === 0)
-    return cli.root.wunderLists;
+    return cli.wunderRoot.wunderLists;
   return this.selectLists(cli, 'list', filters);
 };
 WunderSelector.prototype.selectDeleteLists = function(cli, filters) {
@@ -51,7 +51,7 @@ WunderSelector.prototype.confirmDeleteLists = function(lists) {
 };
 
 WunderSelector.prototype.selectLists = function(cli, action, filters) {
-  root = cli.root;
+  root = cli.wunderRoot;
   // if user specific, return matched/filtered lists
   if (filters !== undefined && filters.lists !== undefined
       && Array.isArray(filters.lists) && filters.lists.length > 0)
