@@ -131,7 +131,10 @@ describe('WunderCache', function() {
       cli.sync()
         .then(function(cli) {
           var shasum = crypto.createHash('sha256');
-          cli.should.have.property('root');
+          cli.should.have.property('wunderRoot');
+          cli.wunderRoot.should.have.property('wunderLists');
+          cli.wunderRoot.wunderLists.length.should.be.equal(1);
+          cli.wunderRoot.wunderLists[0].obj.title.should.be.equal('inbox');
           var cacheObj = {
             obj: cli.wunderRoot.obj,
             lists: cli.wunderRoot.wunderLists.map(function(l) { return l.obj; })
@@ -140,7 +143,24 @@ describe('WunderCache', function() {
           return fs.writeFileAsync(process.cwd() + '/test/caches/' + shasum.digest('hex') + '.json',
                             JSON.stringify(cacheObj));
         })
-        .then(function(cli) { done() })
+        .then(function(cli) { done(); })
+        .catch(function(err) { done(err); });
+    });
+	  it('read root/cacheObj from cache file with hash file name', function (done) {
+      var cli = new WunderCLI(conf);
+      cli.root()
+        .then(function(root) {
+          var shasum = crypto.createHash('sha256');
+          shasum.update(JSON.stringify(root.obj));
+          return fs.readFileAsync(process.cwd() + '/test/caches/' + shasum.digest('hex') + '.json', 'utf8');
+        })
+        .then(JSON.parse)
+        .then(function(root) {
+          root.should.have.property('lists');
+          root.lists.length.should.be.equal(1);
+          root.lists[0].title.should.be.equal('inbox');
+          done();
+        })
         .catch(function(err) { done(err); });
     });
 	  it('clear \'test/caches/\'', function (done) {
