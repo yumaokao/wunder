@@ -16,7 +16,7 @@ describe('WunderCache', function() {
   this.timeout(30000);
 	describe('Root with sha256', function () {
 	  it('should have same hash with/without wunderLists', function (done) {
-      var cli = new WunderCLI(conf.get('Auth'));
+      var cli = new WunderCLI(conf);
       var hash0;
       cli.sync()
         .then(function(cli) {
@@ -44,7 +44,7 @@ describe('WunderCache', function() {
     });
   });
 	describe('Root with sha256 modified', function () {
-    var cli = new WunderCLI(conf.get('Auth'));
+    var cli = new WunderCLI(conf);
     var hash0;
     var hash1;
 	  it('clear list [cache test]', function (done) {
@@ -127,7 +127,7 @@ describe('WunderCache', function() {
         .catch(function(err) { done(err); });
     });
 	  it('save root/cacheObj to cache file with hash file name', function (done) {
-      var cli = new WunderCLI(conf.get('Auth'));
+      var cli = new WunderCLI(conf);
       cli.sync()
         .then(function(cli) {
           var shasum = crypto.createHash('sha256');

@@ -38,7 +38,7 @@ program
   .description('[TODO] Auth wunder')
   .action(function() {
     console.log('YMK in command program.conf ' + program.conf);
-    console.log(WunderConfig.get('Auth'));
+    console.log(WunderConfig);
     // WunderConfig.file();
   });
 
@@ -49,7 +49,7 @@ program
   .description('List all lists and tasks with filters')
   .action(function(lists) {
     var conf = loadProgramConfigs([ program.conf ]);
-    var cli = new WunderCLI(conf.get('Auth'));
+    var cli = new WunderCLI(conf);
     var sel = new WunderSelector();
     var printer = new WunderPrinter();
     cli.sync()
@@ -65,7 +65,7 @@ program
   .description('New lists')
   .action(function(titles) {
     var conf = loadProgramConfigs([ program.conf ]);
-    var cli = new WunderCLI(conf.get('Auth'));
+    var cli = new WunderCLI(conf);
     cli.newLists(titles)
       .then(function(res) { console.log(res.length + ' Lists Successfully Created'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
@@ -76,7 +76,7 @@ program
   .description('Delete lists')
   .action(function(lists) {
     var conf = loadProgramConfigs([ program.conf ]);
-    var cli = new WunderCLI(conf.get('Auth'));
+    var cli = new WunderCLI(conf);
     var sel = new WunderSelector();
     cli.sync()
       .then(function(cli) { return sel.selectDeleteLists(cli, { 'lists': lists }); })
@@ -93,7 +93,7 @@ program
   .option('-t, --titles [title]', 'New titles in order', function(v, t) { t.push(v); return t; }, [])
   .action(function(lists, options) {
     var conf = loadProgramConfigs([ program.conf ]);
-    var cli = new WunderCLI(conf.get('Auth'));
+    var cli = new WunderCLI(conf);
     var sel = new WunderSelector();
     cli.sync()
       .then(function(cli) { return sel.selectRenameLists(cli, { 'lists': lists }); })
@@ -117,7 +117,7 @@ program
 // default goes to lists
 if (!process.argv.slice(2).length) {
     var conf = loadProgramConfigs([ program.conf ]);
-    var cli = new WunderCLI(conf.get('Auth'));
+    var cli = new WunderCLI(conf);
     var printer = new WunderPrinter();
     cli.sync()
       .then(function(cli) { return cli.wunderRoot.wunderLists; })

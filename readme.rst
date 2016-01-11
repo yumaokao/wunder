@@ -26,14 +26,14 @@ Build Up
 * npm install
   code:: sh
 
-  $ npm install --save commmander
   # $ npm install --save wunderlist
-  $ npm install --save restler
+  # $ npm install --save nconf
   # $ npm install --save blessed
+  $ npm install --save commmander
+  $ npm install --save restler
   $ npm install --save bluebird
   $ npm install --save chalk
   $ npm install --save string.prototype.repeat
-  # $ npm install --save nconf
   $ npm install --save merge
   $ npm install --save prompt
   $ npm install --save minimatch

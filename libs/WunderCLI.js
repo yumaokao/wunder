@@ -5,10 +5,10 @@ var Promise = require('bluebird');
 var WunderAPI = require('./models/WunderAPI');
 var WunderRoot = require('./models/WunderRoot');
 
-var WunderCLI = function(auth) {
-  this.baseURL = auth.baseURL;
-  this.options = { headers: { 'X-Access-Token': auth.accessToken,
-                              'X-Client-ID': auth.clientID,
+var WunderCLI = function(conf) {
+  this.baseURL = conf.get('Auth').baseURL;
+  this.options = { headers: { 'X-Access-Token': conf.get('Auth').accessToken,
+                              'X-Client-ID': conf.get('Auth').clientID,
                               'Content-Type': 'application/json' } };
   // this.root = new WunderRoot(null, this);
 };
