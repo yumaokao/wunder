@@ -67,6 +67,7 @@ WunderCLI.prototype.sync = function() {
   });
 };
 
+// lists
 WunderCLI.prototype.newLists = function(titles) {
   var root = this.wunderRoot;
   return Promise.map(titles, function(t) { return root.newList(t); });
@@ -79,6 +80,15 @@ WunderCLI.prototype.renameLists = function(lists, titles) {
 
 WunderCLI.prototype.deleteLists = function(lists) {
   return Promise.map(lists, function(l) { return l.delete(); });
+};
+
+// tasks
+WunderCLI.prototype.newTasks = function(list, titles) {
+  return Promise.map(titles, function(t) { return list.newTask(t); });
+};
+
+WunderCLI.prototype.deleteTasks= function(tasks) {
+  return Promise.map(tasks, function(t) { return t.delete(); });
 };
 
 module.exports = WunderCLI;

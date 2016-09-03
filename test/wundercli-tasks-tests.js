@@ -27,13 +27,13 @@ describe('WunderCLI-Tasks', function() {
         .then(function(res) { done(); })
         .catch(function(err) { done(err); });
     });
-	  it('Create [wunder test]', function (done) {
+	  it('Create list [wunder test]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
           lists.filter(function(l) { return l.obj.title === 'wunder test'; })
             .length.should.be.equal(0);
-          return cli.newLists([ 'wunder test' ]);
+          return cli.newLists(['wunder test']);
         })
         .then(function(res) {
           res.length.should.be.equal(1);
@@ -42,17 +42,58 @@ describe('WunderCLI-Tasks', function() {
         })
         .catch(function(err) { done(err); });
     });
-	  it('Read [wunder test]', function (done) {
+	  it('Create task [task test] at list [wunder test]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
-          lists.filter(function(l) { return l.obj.title === 'wunder test'; })
-            .length.should.be.equal(1);
+          var wls = lists.filter(function(l) { return l.obj.title === 'wunder test'; });
+          wls.length.should.be.equal(1);
+          return cli.newTasks(wls[0], ['task test']);
+        })
+        .then(function(res) {
+          res.length.should.be.equal(1);
+          res[0].title.should.be.equal('task test');
           done();
         })
         .catch(function(err) { done(err); });
     });
-	  it('Delete [wunder test]', function (done) {
+	  it('Read task [task test] at list [wunder test]', function (done) {
+      cli.sync()
+        .then(function(cli) { return cli.wunderRoot.wunderLists; })
+        .then(function(lists) {
+          var wls = lists.filter(function(l) { return l.obj.title === 'wunder test'; });
+          wls.length.should.be.equal(1);
+          return wls[0].wunderTasks;
+        })
+        .then(function(tasks) {
+          tasks.length.should.be.equal(1);
+          tasks[0].obj.title.should.be.equal('task test');
+          var wtsks = tasks.filter(function(t) { return t.obj.title === 'task test'; });
+          wtsks.length.should.be.equal(1);
+          done();
+        })
+        .catch(function(err) { done(err); });
+    });
+	  it('Delete task [task test] at list [wunder test]', function (done) {
+      cli.sync()
+        .then(function(cli) { return cli.wunderRoot.wunderLists; })
+        .then(function(lists) {
+          var wls = lists.filter(function(l) { return l.obj.title === 'wunder test'; });
+          wls.length.should.be.equal(1);
+          return wls[0].wunderTasks;
+        })
+        .then(function(tasks) {
+          var wtsks = tasks.filter(function(t) { return t.obj.title === 'task test'; });
+          wtsks.length.should.be.equal(1);
+          return cli.deleteTasks(wtsks);
+        })
+        .then(function(res) {
+          res.length.should.be.equal(1);
+          done();
+        })
+        .catch(function(err) { done(err); });
+    });
+	  it('Delete list [wunder test]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
@@ -62,18 +103,6 @@ describe('WunderCLI-Tasks', function() {
         })
         .then(function(res) {
           res.length.should.be.equal(1);
-          done();
-        })
-        .catch(function(err) { done(err); });
-    });
-	  it('Read [wunder test] will be deleted', function (done) {
-      cli.sync()
-        .then(function(cli) { return cli.wunderRoot.wunderLists; })
-        .then(function(lists) {
-          lists.filter(function(l) { return l.obj.title === 'wunder test'; })
-            .length.should.be.equal(0);
-          lists.filter(function(l) { return l.obj.title === 'wunder rename'; })
-            .length.should.be.equal(0);
           done();
         })
         .catch(function(err) { done(err); });

@@ -38,6 +38,10 @@ WunderTask.prototype.reminders = function() {
                       'wunderReminders', WunderReminder);
 };
 
+WunderTask.prototype.delete = function() {
+  return this.del('/tasks/' + this.obj.id + '?revision=' + this.obj.revision);
+};
+
 module.exports = WunderTask;
 
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai

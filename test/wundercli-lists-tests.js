@@ -73,7 +73,7 @@ describe('WunderCLI-Lists', function() {
         .then(function(lists) {
           lists.filter(function(l) { return l.obj.title === 'wunder test'; })
             .length.should.be.equal(0);
-          return cli.newLists([ 'wunder test' ]);
+          return cli.newLists(['wunder test']);
         })
         .then(function(res) {
           res.length.should.be.equal(1);
@@ -96,7 +96,7 @@ describe('WunderCLI-Lists', function() {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
-          var titles = [ 'wunder rename' ];
+          var titles = ['wunder rename'];
           var wls = lists.filter(function(l) { return l.obj.title === 'wunder test'; });
           return cli.renameLists(wls, titles);
         })
@@ -139,7 +139,7 @@ describe('WunderCLI-Lists', function() {
     var clsts = lasts.slice(0, 2);
     var ulsts = lasts.slice(2, 4);
     var cli = new WunderCLI(conf);
-	  it('If exists, Delete [ crud_lists_* ', function (done) {
+	  it('If exists, Delete [crud_lists_*]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
@@ -157,7 +157,7 @@ describe('WunderCLI-Lists', function() {
         .then(function(lists) {
           lists.filter(function(l) { return lasts.indexOf(l.obj.title) !== -1; })
             .length.should.be.equal(0);
-          return cli.newLists([ 'crud_lists_0', 'crud_lists_1' ]);
+          return cli.newLists(['crud_lists_0', 'crud_lists_1']);
         })
         .then(function(res) {
           res.length.should.be.equal(2);
