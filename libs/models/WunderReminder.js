@@ -4,7 +4,7 @@ var util = require('util');
 var WunderAPI = require('./WunderAPI');
 
 var WunderReminder = function(obj, up) {
-  WunderAPI.call(this, obj, up)
+  WunderAPI.call(this, obj, up);
 };
 util.inherits(WunderReminder, WunderAPI);
 

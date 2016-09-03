@@ -6,7 +6,7 @@ var WunderAPI = require('./WunderAPI');
 var WunderTask = require('./WunderTask');
 
 var WunderList = function(obj, up) {
-  WunderAPI.call(this, obj, up)
+  WunderAPI.call(this, obj, up);
 
   this.wunderTasks = [];
   // this.wunderSubtasks = [];
