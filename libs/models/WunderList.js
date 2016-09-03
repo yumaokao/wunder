@@ -30,6 +30,10 @@ WunderList.prototype.rename = function(title) {
       { 'revision': this.obj.revision, 'title': title });
 };
 
+WunderList.prototype.newTask= function(title) {
+  return this.post('/tasks', { 'title': title, 'list_id': this.obj.id });
+};
+
 module.exports = WunderList;
 
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai

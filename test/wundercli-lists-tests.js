@@ -11,7 +11,7 @@ var WunderSelector = require('../libs/WunderSelector');
 var WunderConfig = require('../libs/WunderConfig');
 var conf = new WunderConfig();
 
-describe('WunderCLI', function() {
+describe('WunderCLI-Lists', function() {
   this.timeout(30000);
 	describe('Should always have a list \'inbox\' at head', function () {
 	  it('should be have a title \'inbox\'', function (done) {
