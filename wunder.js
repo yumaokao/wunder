@@ -66,7 +66,8 @@ program
   .action(function(titles) {
     var conf = loadProgramConfigs([ program.conf ]);
     var cli = new WunderCLI(conf);
-    cli.newLists(titles)
+    cli.sync()
+      .then(function(cli) { return cli.newLists(titles); })
       .then(function(res) { console.log(res.length + ' Lists Successfully Created'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
   });

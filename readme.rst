@@ -48,6 +48,25 @@ Build Up
   # auto install
   $ npm install
 
+* npm update
+  code:: sh
+
+  $ npm update
+
+
+Mocha
+-----
+* tests
+  code:: sh
+
+  # run all tests
+  $ mocha
+
+  # run tests with filter
+  $ mocha -f Sel
+  WunderSelector
+    parseNumberRange
+
 
 Debug
 -----
@@ -56,6 +75,21 @@ Debug
 
   $ sudo npm install -g node-inspector
   $ node-debug wunder.js
+
+  # node v6.5.0 will lead to websocket_closed
+  # TypeError: Cannot read property 'ref' of undefined
+  #     at InjectorClient.<anonymous>
+  #         (.../node-inspector/lib/InjectorClient.js:111:22)
+  #
+  # see https://github.com/node-inspector/node-inspector/issues/905
+
+* deprecation
+  code:: sh
+
+  # use --trace-deprecation   show stack traces on deprecations
+  $ node --trace-deprecation wunder dl
+  Select: Lists to delete (e.g. 1,2,3-4):  (node:2306) DeprecationWarning: 'root' is deprecated, use 'global'
+      at WunderSelector.selectLists (/home/yumaokao/stages/wunder/libs/WunderSelector.js:54:8)
 
 
 Todo

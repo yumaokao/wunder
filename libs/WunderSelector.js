@@ -51,7 +51,7 @@ WunderSelector.prototype.confirmDeleteLists = function(lists) {
 };
 
 WunderSelector.prototype.selectLists = function(cli, action, filters) {
-  root = cli.wunderRoot;
+  var root = cli.wunderRoot;
   // if user specific, return matched/filtered lists
   if (filters !== undefined && filters.lists !== undefined
       && Array.isArray(filters.lists) && filters.lists.length > 0)
