@@ -50,7 +50,24 @@ describe('WunderCLI-Lists', function() {
         });
     });
 	  it.skip('could not be renamed', function (done) {
-      done();
+      // IMHO, 'inbox' should not be renamed
+      var cli = new WunderCLI(conf);
+      cli.sync()
+        .then(function(cli) { return cli.wunderRoot.wunderLists; })
+        .then(function(lists) {
+          lists.length.should.be.equal(1);
+          lists[0].should.have.property('obj');
+          lists[0].obj.should.have.property('title').to.be.equal('inbox');
+          return cli.renameLists(lists, ['rename inbox']);
+        })
+        .then(function(res) {
+          res.should.be.equal(0);
+          done();
+        })
+        .catch(function(err) {
+          err.should.have.property('code').to.be.equal(422);
+          done();
+        });
     });
   });
 	describe('CRUD /list with a single [wunder test]', function () {
