@@ -70,6 +70,12 @@ Mocha
 
 Debug
 -----
+* node v6.5.0
+  code:: sh
+
+  # experimental feature
+  $ node --inspect --debug-brk wunder.js
+
 * node-inspector
   code:: sh
 
@@ -87,7 +93,7 @@ Debug
   code:: sh
 
   # use --trace-deprecation   show stack traces on deprecations
-  $ node --trace-deprecation wunder dl
+  $ node --trace-deprecation wunder.js dl
   Select: Lists to delete (e.g. 1,2,3-4):  (node:2306) DeprecationWarning: 'root' is deprecated, use 'global'
       at WunderSelector.selectLists (/home/yumaokao/stages/wunder/libs/WunderSelector.js:54:8)
 

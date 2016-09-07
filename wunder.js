@@ -109,13 +109,15 @@ program
   .command('new-tasks <titles...>')
   .alias('nt')
   .description('New tasks')
-  .action(function(titles) {
-    var conf = loadProgramConfigs([ program.conf ]);
-    var cli = new WunderCLI(conf);
-    cli.sync()
-      .then(function(cli) { return cli.newLists(titles); })
-      .then(function(res) { console.log(res.length + ' Lists Successfully Created'); })
-      .catch(function(err) { console.log('Failed: ' + err.message); });
+  .option('-l, --lists [list]', 'Lists for newly tasks to place', function(v, t) { t.push(v); return t; }, [])
+  .action(function(titles, options) {
+    console.log(options.list);
+  });
+program
+  .command('delete-task [tasks...]')
+  .alias('dt')
+  .description('Delete tasks')
+  .action(function(lists) {
   });
 
 program
