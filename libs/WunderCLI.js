@@ -79,17 +79,9 @@ WunderCLI.prototype.renameLists = function(lists, titles) {
   return Promise.map(lists, function(l, i) { return l.rename(titles[i]); });
 };
 
-WunderCLI.prototype.deleteLists = function(lists) {
-  return Promise.map(lists, function(l) { return l.delete(); });
-};
-
 // tasks
 WunderCLI.prototype.updateTasks = function(tasks, updates) {
   return Promise.map(tasks, function(t, i) { return t.update(updates[i]); });
-};
-
-WunderCLI.prototype.deleteTasks= function(tasks) {
-  return Promise.map(tasks, function(t) { return t.delete(); });
 };
 
 module.exports = WunderCLI;

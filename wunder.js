@@ -61,7 +61,7 @@ program
 
 // url: /lists
 program
-  .command('new-lists <titles...>')
+  .command('new-list <titles...>')
   .alias('nl')
   .description('New lists')
   .action(function(titles) {
@@ -83,10 +83,9 @@ program
     cli.sync()
       .then(function(cli) { return sel.selectDeleteLists(cli, { 'lists': lists }); })
       .then(function(ls) { return sel.confirmDeleteLists(ls); })
-      .then(cli.deleteLists)
+      .then(function(ls) { return Promise.map(ls, function(l) { return l.delete(); }); })
       .then(function(res) { console.log(res.length + ' Lists Successfully Deleted'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
-    // console.log('YMK in command delte-list');
   });
 program
   .command('rename-list [lists...]')
@@ -107,16 +106,16 @@ program
 
 // url: /tasks
 program
-  .command('new-tasks <titles...>')
+  .command('new-task <titles...>')
   .alias('nt')
   .description('New tasks')
-  .option('-l, --list [list]', 'List for newly tasks to place', function(v, t) { t.push(v); return t; }, [])
+  .option('-l, --lists [lists]', 'Lists for newly tasks to place', function(v, t) { t.push(v); return t; }, [])
   .action(function(titles, options) {
     var conf = loadProgramConfigs([ program.conf ]);
     var cli = new WunderCLI(conf);
     var sel = new WunderSelector();
     cli.sync()
-      .then(function(cli) { return sel.selectLists(cli, 'add new tasks', { 'lists': options.list }); })
+      .then(function(cli) { return sel.selectLists(cli, 'add new tasks', { 'lists': options.lists }); })
       .then(function(ls) { return Promise.map(ls, function(l) { return l.newTasks(titles); }); })
       .then(function(res) { console.log(res.length + ' Tasks Successfully Created'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
@@ -125,7 +124,18 @@ program
   .command('delete-task [tasks...]')
   .alias('dt')
   .description('Delete tasks')
-  .action(function(lists) {
+  .option('-l, --lists [lists]', 'Lists for newly tasks to place', function(v, t) { t.push(v); return t; }, [])
+  .action(function(tasks, options) {
+    var conf = loadProgramConfigs([ program.conf ]);
+    var cli = new WunderCLI(conf);
+    var sel = new WunderSelector();
+    cli.sync()
+      .then(function(cli) { return sel.selectLists(cli, 'to select tasks', { 'lists': options.lists }); })
+      .then(function(ls) { return sel.selectTasks(ls, 'delete', { 'tasks': tasks }); })
+      .then(function(tsks) { return sel.confirmDeleteTasks(tasks); })
+      .then(function(tsks) { return Promise.map(tsks, function(t) { return t.delete(); }); })
+      .then(function(res) { console.log(res.length + ' Tasks Successfully Deleted'); })
+      .catch(function(err) { console.log('Failed: ' + err.message); });
   });
 
 program

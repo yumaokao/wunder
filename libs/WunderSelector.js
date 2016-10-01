@@ -47,7 +47,7 @@ WunderSelector.prototype.confirmDeleteLists = function(lists) {
     console.log(chalk.black.bgYellow('D') + ' ' +
     chalk.bold.blue(l.obj.title + ' (' + l.wunderTasks.length + ')'));
   });
-  return this.confirmLists('delete', lists);
+  return this.confirmObjs(action, 'lists', lists);
 };
 
 WunderSelector.prototype.selectLists = function(cli, action, filters) {
@@ -79,11 +79,11 @@ WunderSelector.prototype.selectLists = function(cli, action, filters) {
   });
 };
 
-WunderSelector.prototype.confirmLists = function(action, lists) {
+WunderSelector.prototype.confirmObjs = function(action, type, objs) {
   var schema = {
     properties: {
       confirm: {
-        description: 'Sure to ' + action + ' these lists(' + lists.length + ') ? [y/N]',
+        description: 'Sure to ' + action + ' these ' + type + '(' + objs.length + ') ? [y/N]',
         pattern: /^[YyNn]$/,
         message: 'y or n',
         default: 'n',
@@ -95,9 +95,48 @@ WunderSelector.prototype.confirmLists = function(action, lists) {
   prompt.start();
   return new Promise(function(resolve, reject) {
     prompt.getAsync(schema)
-    .then(function(res) { resolve(res.confirm.toLowerCase() === 'y' ? lists : []); })
+    .then(function(res) { resolve(res.confirm.toLowerCase() === 'y' ? objs : []); })
     .catch(function(err) { reject({ message: err }); });
   });
+};
+
+// Tasks
+WunderSelector.prototype.selectTasks = function(lists, action, filters) {
+  var self = this;
+  var ltasks = lists.map(function(l) { return l.wunderTasks; });
+  var tasks = [].concat.apply([], ltasks);
+
+  if (filters !== undefined && filters.tasks !== undefined
+      && Array.isArray(filters.tasks) && filters.tasks.length > 0)
+    return tasks.filter(function(t) {
+      // Use wildcard/minimatch
+      return filters.tasks.filter(function(f) {
+        // console.log(JSON.stringify(f));
+        // console.log(f + ' ' + l.obj.title + ' -> ' + minimatch(l.obj.title, f));
+        return minimatch(t.obj.title, f);
+      }).length !== 0;
+      // return filters.lists.indexOf(l.obj.title) !== -1;
+    });
+
+  tasks.forEach(function(t, i) {
+    console.log(chalk.black.bgYellow(i + 1) + ' ' +
+                chalk.bold.blue(t.obj.title + ' in ' + t.up.obj.title));
+  });
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    prompt.message = 'Select'
+    prompt.start();
+    prompt.getAsync(self.schemaNumberRange('Tasks to ' + action))
+      .then(function(res) { resolve(self.parseNumberRange(res.range, tasks)); })
+      .catch(function(err) { reject({ message: err }); });
+  });
+};
+WunderSelector.prototype.confirmDeleteTasks= function(tasks) {
+  tasks.forEach(function(t) {
+    console.log(chalk.black.bgYellow('D') + ' ' +
+    chalk.bold.blue(t.obj.title + ' in ' + t.up.obj.title));
+  });
+  return this.confirmObjs(action, 'tasks', tasks);
 };
 
 WunderSelector.prototype.schemaNumberRange = function(act) {
