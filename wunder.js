@@ -6,6 +6,7 @@ var fs = require('fs');
 var path = require('path');
 var program = require('commander');
 var pkg = require('./package');
+var Promise = require('bluebird');
 var WunderCLI = require('./libs/WunderCLI');
 var WunderPrinter = require('./libs/WunderPrinter');
 var WunderSelector = require('./libs/WunderSelector');
@@ -109,9 +110,16 @@ program
   .command('new-tasks <titles...>')
   .alias('nt')
   .description('New tasks')
-  .option('-l, --lists [list]', 'Lists for newly tasks to place', function(v, t) { t.push(v); return t; }, [])
+  .option('-l, --list [list]', 'List for newly tasks to place', function(v, t) { t.push(v); return t; }, [])
   .action(function(titles, options) {
-    console.log(options.list);
+    var conf = loadProgramConfigs([ program.conf ]);
+    var cli = new WunderCLI(conf);
+    var sel = new WunderSelector();
+    cli.sync()
+      .then(function(cli) { return sel.selectLists(cli, 'add new tasks', { 'lists': options.list }); })
+      .then(function(ls) { return Promise.map(ls, function(l) { return l.newTasks(titles); }); })
+      .then(function(res) { console.log(res.length + ' Tasks Successfully Created'); })
+      .catch(function(err) { console.log('Failed: ' + err.message); });
   });
 program
   .command('delete-task [tasks...]')

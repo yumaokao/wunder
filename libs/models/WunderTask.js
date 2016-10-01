@@ -42,6 +42,13 @@ WunderTask.prototype.delete = function() {
   return this.del('/tasks/' + this.obj.id + '?revision=' + this.obj.revision);
 };
 
+WunderTask.prototype.update = function(updater) {
+  // TODO: check key in updater ?
+  var data = updater;
+  data['revision'] = this.obj.revision;
+  return this.patch('/tasks/' + this.obj.id, data);
+};
+
 module.exports = WunderTask;
 
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai

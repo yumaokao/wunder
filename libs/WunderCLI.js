@@ -67,6 +67,7 @@ WunderCLI.prototype.sync = function() {
   });
 };
 
+// TODO: following should to merged into model
 // lists
 WunderCLI.prototype.newLists = function(titles) {
   var root = this.wunderRoot;
@@ -83,8 +84,8 @@ WunderCLI.prototype.deleteLists = function(lists) {
 };
 
 // tasks
-WunderCLI.prototype.newTasks = function(list, titles) {
-  return Promise.map(titles, function(t) { return list.newTask(t); });
+WunderCLI.prototype.updateTasks = function(tasks, updates) {
+  return Promise.map(tasks, function(t, i) { return t.update(updates[i]); });
 };
 
 WunderCLI.prototype.deleteTasks= function(tasks) {

@@ -25,13 +25,19 @@ WunderList.prototype.delete = function() {
   return this.del('/lists/' + this.obj.id + '?revision=' + this.obj.revision);
 };
 
+// TODO: replace with update
 WunderList.prototype.rename = function(title) {
   return this.patch('/lists/' + this.obj.id,
       { 'revision': this.obj.revision, 'title': title });
 };
 
-WunderList.prototype.newTask= function(title) {
+WunderList.prototype.newTask = function(title) {
   return this.post('/tasks', { 'title': title, 'list_id': this.obj.id });
+};
+
+WunderList.prototype.newTasks = function(titles) {
+  var self = this;
+  return Promise.map(titles, function(t) { return self.newTask(t); });
 };
 
 module.exports = WunderList;
