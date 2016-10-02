@@ -28,6 +28,7 @@ describe('WunderCache', function() {
             lists: root.wunderLists.map(function(l) { return l.obj; })
           };
           // console.log(JSON.stringify(cacheObj));
+          // console.log(JSON.stringify(root));
           shasum.update(JSON.stringify(cacheObj.obj));
           hash0 = shasum.digest('hex');
           // console.log(shasum.digest('hex'));

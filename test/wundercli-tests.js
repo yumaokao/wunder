@@ -122,7 +122,7 @@ describe('WunderSelector', function() {
       cli.sync()
         .then(function(cli) {
           stdin('1', '\n');
-          return sel.selectDeleteLists(cli, { 'lists': [] });
+          return sel.selectLists(cli, 'delete', { 'lists': [] });
         })
         .then(function(lists) {
           lists.should.have.length(1);

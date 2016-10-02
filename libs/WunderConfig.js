@@ -21,6 +21,18 @@ var schema = {
       doc: 'Application Client ID',
       default: '501cd26b0b953ee66cb2'
     }
+  },
+  Cache: {
+    cacheDir: {
+      format: String,
+      doc: 'Directory where cacheObjs stores',
+      default: undefined
+    },
+    useCache: {
+      format: Boolean,
+      doc: 'WunderCLI uses cache or not',
+      default: false
+    }
   }
 };
 

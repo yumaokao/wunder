@@ -15,7 +15,7 @@ var WunderConfig = require('./libs/WunderConfig');
 
 var loadProgramConfigs = function(paths) {
   var configPaths = [ path.join(process.env.PWD, '/.config/', pkg.name + '.json'),
-                      path.join(process.env.HOME, '/.config/', pkg.name + 'json') ];
+                      path.join(process.env.HOME, '/.config/', pkg.name + '.json') ];
   paths = paths.filter(function(p) { return p !== undefined; });
   paths = paths.map(function(p) { return path.join(p, pkg.name + '.json'); });
   var conf;

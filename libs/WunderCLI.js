@@ -1,6 +1,7 @@
 'use strict';
 
 var util = require('util');
+var path = require('path');
 var Promise = require('bluebird');
 var WunderAPI = require('./models/WunderAPI');
 var WunderRoot = require('./models/WunderRoot');
@@ -10,6 +11,11 @@ var WunderCLI = function(conf) {
   this.options = { headers: { 'X-Access-Token': conf.get('Auth').accessToken,
                               'X-Client-ID': conf.get('Auth').clientID,
                               'Content-Type': 'application/json' } };
+  this.cacheDir = conf.get('Cache').cacheDir ||
+    path.join(process.env.HOME, '/.cache/wunder', conf.get('Auth').clientID);
+  this.useCache = conf.get('Cache').useCache;
+  // console.log(this.cacheDir);
+  // console.log(this.useCache);
   // this.root = new WunderRoot(null, this);
 };
 util.inherits(WunderCLI, WunderAPI);
