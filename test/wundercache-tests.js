@@ -52,7 +52,7 @@ describe('WunderCache', function() {
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
           var wls = lists.filter(function(l) { return l.obj.title === 'cache test'; });
-          return cli.deleteLists(wls);
+          return Promise.map(wls, function(l) { return l.delete(); });
         })
         .then(function(res) { done(); })
         .catch(function(err) { done(err); });
@@ -74,7 +74,7 @@ describe('WunderCache', function() {
         .then(function(lists) {
           lists.filter(function(l) { return l.obj.title === 'cache test'; })
             .length.should.be.equal(0);
-          return cli.newLists([ 'cache test' ]);
+          return cli.wunderRoot.newLists([ 'cache test' ]);
         })
         .then(function(res) {
           res.length.should.be.equal(1);
@@ -100,7 +100,7 @@ describe('WunderCache', function() {
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
           var wls = lists.filter(function(l) { return l.obj.title === 'cache test'; });
-          return cli.deleteLists(wls);
+          return Promise.map(wls, function(l) { return l.delete(); });
         })
         .then(function(res) { done(); })
         .catch(function(err) { done(err); });

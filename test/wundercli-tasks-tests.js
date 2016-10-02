@@ -2,6 +2,7 @@
 var chai = require('chai');
 var should = require('chai').should();
 var stdin = require('bdd-stdin');
+var Promise = require('bluebird');
 // var chaiAsPromised = require("chai-as-promised");
 // chai.use(chaiAsPromised);
 
@@ -22,7 +23,7 @@ describe('WunderCLI-Tasks', function() {
           var wls = lists.filter(function(l) {
             return l.obj.title === 'wunder test' || l.obj.title === 'wunder rename';
           });
-          return cli.deleteLists(wls);
+          return Promise.map(wls, function(l) { return l.delete(); });
         })
         .then(function(res) { done(); })
         .catch(function(err) { done(err); });
@@ -33,7 +34,7 @@ describe('WunderCLI-Tasks', function() {
         .then(function(lists) {
           lists.filter(function(l) { return l.obj.title === 'wunder test'; })
             .length.should.be.equal(0);
-          return cli.newLists(['wunder test']);
+          return cli.wunderRoot.newLists(['wunder test']);
         })
         .then(function(res) {
           res.length.should.be.equal(1);
@@ -42,13 +43,13 @@ describe('WunderCLI-Tasks', function() {
         })
         .catch(function(err) { done(err); });
     });
-	  it('Create task [task test] at list [wunder test]', function (done) {
+    it('Create task [task test] at list [wunder test]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
           var wls = lists.filter(function(l) { return l.obj.title === 'wunder test'; });
           wls.length.should.be.equal(1);
-          return cli.newTasks(wls[0], ['task test']);
+          return wls[0].newTasks(['task test']);
         })
         .then(function(res) {
           res.length.should.be.equal(1);
@@ -57,7 +58,7 @@ describe('WunderCLI-Tasks', function() {
         })
         .catch(function(err) { done(err); });
     });
-	  it('Read task [task test] at list [wunder test]', function (done) {
+    it('Read task [task test] at list [wunder test]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
@@ -74,7 +75,7 @@ describe('WunderCLI-Tasks', function() {
         })
         .catch(function(err) { done(err); });
     });
-	  it('Update task [task test] -> [task rename]', function (done) {
+    it('Update task [task test] -> [task rename]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
@@ -90,8 +91,8 @@ describe('WunderCLI-Tasks', function() {
           return wtsks;
         })
         .then(function(tasks) {
-          var updates = [ { title: 'task rename'} ];
-          return cli.updateTasks(tasks, updates);
+          var updates = [ { 'title': 'task rename'} ];
+          return Promise.map(tasks, function(t, i) { return t.update(updates[i]); });
         })
         .then(function(res) {
           res.length.should.be.equal(1);
@@ -100,7 +101,7 @@ describe('WunderCLI-Tasks', function() {
         })
         .catch(function(err) { done(err); });
     });
-	  it('Delete task [task rename] at list [wunder test]', function (done) {
+    it('Delete task [task rename] at list [wunder test]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
@@ -111,7 +112,7 @@ describe('WunderCLI-Tasks', function() {
         .then(function(tasks) {
           var wtsks = tasks.filter(function(t) { return t.obj.title === 'task rename'; });
           wtsks.length.should.be.equal(1);
-          return cli.deleteTasks(wtsks);
+          return Promise.map(wtsks, function(t) { return t.delete(); });
         })
         .then(function(res) {
           res.length.should.be.equal(1);
@@ -125,7 +126,7 @@ describe('WunderCLI-Tasks', function() {
         .then(function(lists) {
           var wls = lists.filter(function(l) { return l.obj.title === 'wunder test'; });
           wls.length.should.be.equal(1);
-          return cli.deleteLists(wls);
+          return Promise.map(wls, function(l) { return l.delete(); });
         })
         .then(function(res) {
           res.length.should.be.equal(1);
@@ -134,85 +135,6 @@ describe('WunderCLI-Tasks', function() {
         .catch(function(err) { done(err); });
     });
   });
-
-	// describe('CRUD /list with two [crud_lists_0, crud_lists_1]', function () {
-    // var lasts = [ 'crud_lists_0', 'crud_lists_1', 'crud_lists_2' , 'crud_lists_3' ];
-    // var clsts = lasts.slice(0, 2);
-    // var ulsts = lasts.slice(2, 4);
-    // var cli = new WunderCLI(conf);
-		// it('If exists, Delete [ crud_lists_* ', function (done) {
-      // cli.sync()
-        // .then(function(cli) { return cli.wunderRoot.wunderLists; })
-        // .then(function(lists) {
-          // var wls = lists.filter(function(l) {
-            // return lasts.indexOf(l.obj.title) !== -1;
-          // });
-          // return cli.deleteLists(wls);
-        // })
-        // .then(function(res) { done(); })
-        // .catch(function(err) { done(err); });
-    // });
-		// it('Create [crud_lists_0, crud_lists_1]', function (done) {
-      // cli.sync()
-        // .then(function(cli) { return cli.wunderRoot.wunderLists; })
-        // .then(function(lists) {
-          // lists.filter(function(l) { return lasts.indexOf(l.obj.title) !== -1; })
-            // .length.should.be.equal(0);
-          // return cli.newLists([ 'crud_lists_0', 'crud_lists_1' ]);
-        // })
-        // .then(function(res) {
-          // res.length.should.be.equal(2);
-          // done();
-        // })
-        // .catch(function(err) { done(err); });
-    // });
-		// it('Read [crud_lists_0, crud_lists_1]', function (done) {
-      // cli.sync()
-        // .then(function(cli) { return cli.wunderRoot.wunderLists; })
-        // .then(function(lists) {
-          // lists.filter(function(l) { return clsts.indexOf(l.obj.title) !== -1; })
-            // .length.should.be.equal(2);
-          // done();
-        // })
-        // .catch(function(err) { done(err); });
-    // });
-		// it('Update [ _0, _1 ] -> [ _2, _3 ]', function (done) {
-      // cli.sync()
-        // .then(function(cli) { return cli.wunderRoot.wunderLists; })
-        // .then(function(lists) {
-          // var wls = lists.filter(function(l) { return clsts.indexOf(l.obj.title) !== -1; });
-          // return cli.renameLists(wls, ulsts);
-        // })
-        // .then(function(res) {
-          // res.length.should.be.equal(2);
-          // done();
-        // })
-        // .catch(function(err) { done(err); });
-    // });
-		// it('Delete [_2, _3 ]', function (done) {
-      // cli.sync()
-        // .then(function(cli) { return cli.wunderRoot.wunderLists; })
-        // .then(function(lists) {
-          // var wls = lists.filter(function(l) { return ulsts.indexOf(l.obj.title) !== -1; });
-          // wls.length.should.be.equal(2);
-          // return cli.deleteLists(wls);
-        // })
-        // .then(function(res) {
-          // res.length.should.be.equal(2);
-          // done();
-        // })
-        // .catch(function(err) { done(err); });
-    // });
-		// it('Read [ _0, _1, _2, _3 ] will be deleted', function (done) {
-      // cli.sync()
-        // .then(function(cli) { return cli.wunderRoot.wunderLists; })
-        // .then(function(lists) {
-          // lists.filter(function(l) { return lasts.indexOf(l.obj.title) !== -1; })
-            // .length.should.be.equal(0);
-          // done();
-        // })
-        // .catch(function(err) { done(err); });
-    // });
-  // });
 });
+
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai

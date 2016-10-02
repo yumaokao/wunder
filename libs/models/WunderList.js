@@ -25,10 +25,11 @@ WunderList.prototype.delete = function() {
   return this.del('/lists/' + this.obj.id + '?revision=' + this.obj.revision);
 };
 
-// TODO: replace with update
-WunderList.prototype.rename = function(title) {
-  return this.patch('/lists/' + this.obj.id,
-      { 'revision': this.obj.revision, 'title': title });
+WunderList.prototype.update = function(updater) {
+  // TODO: check keys in updater ?
+  var data = updater;
+  data['revision'] = this.obj.revision;
+  return this.patch('/lists/' + this.obj.id, data);
 };
 
 WunderList.prototype.newTask = function(title) {

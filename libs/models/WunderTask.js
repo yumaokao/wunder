@@ -43,7 +43,7 @@ WunderTask.prototype.delete = function() {
 };
 
 WunderTask.prototype.update = function(updater) {
-  // TODO: check key in updater ?
+  // TODO: check keys in updater ?
   var data = updater;
   data['revision'] = this.obj.revision;
   return this.patch('/tasks/' + this.obj.id, data);

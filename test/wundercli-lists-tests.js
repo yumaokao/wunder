@@ -2,6 +2,7 @@
 var chai = require('chai');
 var should = require('chai').should();
 var stdin = require('bdd-stdin');
+var Promise = require('bluebird');
 // var chaiAsPromised = require("chai-as-promised");
 // chai.use(chaiAsPromised);
 
@@ -37,7 +38,7 @@ describe('WunderCLI-Lists', function() {
           lists.length.should.be.equal(1);
           lists[0].should.have.property('obj');
           lists[0].obj.should.have.property('title').to.be.equal('inbox');
-          return cli.deleteLists(lists);
+          return Promise.map(lists, function(l) { return l.delete(); });
         })
         .then(function(res) {
           res.should.be.equal(0);
@@ -54,10 +55,11 @@ describe('WunderCLI-Lists', function() {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
-          lists.length.should.be.equal(1);
+          lists.length.should.have.property['length'].to.be.equal(1);
           lists[0].should.have.property('obj');
           lists[0].obj.should.have.property('title').to.be.equal('inbox');
-          return cli.renameLists(lists, ['rename inbox']);
+          var titles = [ { 'title': 'rename inbox' } ];
+          return Promise.map(lists, function(l, i) { return l.update(titles[i]); });
         })
         .then(function(res) {
           res.should.be.equal(0);
@@ -78,7 +80,7 @@ describe('WunderCLI-Lists', function() {
           var wls = lists.filter(function(l) {
             return l.obj.title === 'wunder test' || l.obj.title === 'wunder rename';
           });
-          return cli.deleteLists(wls);
+          return Promise.map(wls, function(l) { return l.delete(); });
         })
         .then(function(res) { done(); })
         .catch(function(err) { done(err); });
@@ -89,7 +91,7 @@ describe('WunderCLI-Lists', function() {
         .then(function(lists) {
           lists.filter(function(l) { return l.obj.title === 'wunder test'; })
             .length.should.be.equal(0);
-          return cli.newLists(['wunder test']);
+          return cli.wunderRoot.newLists(['wunder test']);
         })
         .then(function(res) {
           res.length.should.be.equal(1);
@@ -112,9 +114,9 @@ describe('WunderCLI-Lists', function() {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
-          var titles = ['wunder rename'];
+          var titles = [ { 'title': 'wunder rename' } ];
           var wls = lists.filter(function(l) { return l.obj.title === 'wunder test'; });
-          return cli.renameLists(wls, titles);
+          return Promise.map(wls, function(l, i) { return l.update(titles[i]); });
         })
         .then(function(res) {
           res.length.should.be.equal(1);
@@ -129,7 +131,7 @@ describe('WunderCLI-Lists', function() {
         .then(function(lists) {
           var wls = lists.filter(function(l) { return l.obj.title === 'wunder rename'; });
           wls.length.should.be.equal(1);
-          return cli.deleteLists(wls);
+          return Promise.map(wls, function(l) { return l.delete(); });
         })
         .then(function(res) {
           res.length.should.be.equal(1);
@@ -162,7 +164,7 @@ describe('WunderCLI-Lists', function() {
           var wls = lists.filter(function(l) {
             return lasts.indexOf(l.obj.title) !== -1;
           });
-          return cli.deleteLists(wls);
+          return Promise.map(wls, function(l) { return l.delete(); });
         })
         .then(function(res) { done(); })
         .catch(function(err) { done(err); });
@@ -173,7 +175,7 @@ describe('WunderCLI-Lists', function() {
         .then(function(lists) {
           lists.filter(function(l) { return lasts.indexOf(l.obj.title) !== -1; })
             .length.should.be.equal(0);
-          return cli.newLists(['crud_lists_0', 'crud_lists_1']);
+          return cli.wunderRoot.newLists(['crud_lists_0', 'crud_lists_1']);
         })
         .then(function(res) {
           res.length.should.be.equal(2);
@@ -196,7 +198,8 @@ describe('WunderCLI-Lists', function() {
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
           var wls = lists.filter(function(l) { return clsts.indexOf(l.obj.title) !== -1; });
-          return cli.renameLists(wls, ulsts);
+          var titles = ulsts.map(function(u) { return { 'title': u }; });
+          return Promise.map(wls, function(l, i) { return l.update(titles[i]); });
         })
         .then(function(res) {
           res.length.should.be.equal(2);
@@ -210,7 +213,7 @@ describe('WunderCLI-Lists', function() {
         .then(function(lists) {
           var wls = lists.filter(function(l) { return ulsts.indexOf(l.obj.title) !== -1; });
           wls.length.should.be.equal(2);
-          return cli.deleteLists(wls);
+          return Promise.map(wls, function(l) { return l.delete(); });
         })
         .then(function(res) {
           res.length.should.be.equal(2);

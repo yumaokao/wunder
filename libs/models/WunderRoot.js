@@ -32,6 +32,11 @@ WunderRoot.prototype.newList = function(title) {
   return this.post('/lists', { 'title': title });
 };
 
+WunderRoot.prototype.newLists = function(titles) {
+  var self = this;
+  return Promise.map(titles, function(t) { return self.newList(t); });
+};
+
 module.exports = WunderRoot;
 
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai

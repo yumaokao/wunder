@@ -20,9 +20,9 @@ WunderSelector.prototype.selectListLists = function(cli, filters) {
 WunderSelector.prototype.selectDeleteLists = function(cli, filters) {
   return this.selectLists(cli, 'delete', filters);
 };
-WunderSelector.prototype.selectRenameLists = function(cli, filters) {
-  return this.selectLists(cli, 'rename', filters);
-};
+// WunderSelector.prototype.selectRenameLists = function(cli, filters) {
+  // return this.selectLists(cli, 'rename', filters);
+// };
 WunderSelector.prototype.inputRenameTitles = function(lists, titles) {
   var self = this;
   return new Promise(function(resolve, reject) {

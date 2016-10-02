@@ -68,8 +68,28 @@ program
     var conf = loadProgramConfigs([ program.conf ]);
     var cli = new WunderCLI(conf);
     cli.sync()
-      .then(function(cli) { return Promise.map(titles, function(t) { return cli.wunderRoot.newList(t); }); })
+      .then(function(cli) { return cli.wunderRoot.newLists(titles); })
       .then(function(res) { console.log(res.length + ' Lists Successfully Created'); })
+      .catch(function(err) { console.log('Failed: ' + err.message); });
+  });
+program
+  .command('update-list <updates...>')
+  .alias('ul')
+  .description('Update lists')
+  .option('-l, --lists [lists]', 'Lists to update', function(v, t) { t.push(v); return t; }, [])
+  .action(function(updates, options) {
+    var conf = loadProgramConfigs([ program.conf ]);
+    var cli = new WunderCLI(conf);
+    var sel = new WunderSelector();
+    cli.sync()
+      .then(function(cli) { return sel.selectLists(cli, 'update', { 'lists': options.lists }); })
+      .then(function(ls) {
+        if (ls.length !== updates.length)
+          return Promise.reject({ message: 'Please give same number of updates as selected lists' });
+        var upds = updates.map(function(u) { return JSON.parse(u); });
+        return Promise.map(ls, function(l, i) { return l.update(upds[i]); });
+      })
+      .then(function(res) { console.log(res.length + ' Lists Successfully Updated'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
   });
 program
@@ -87,22 +107,22 @@ program
       .then(function(res) { console.log(res.length + ' Lists Successfully Deleted'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
   });
-program
-  .command('rename-list [lists...]')
-  .alias('rl')
-  .description('Rename lists')
-  .option('-t, --titles [title]', 'New titles in order', function(v, t) { t.push(v); return t; }, [])
-  .action(function(lists, options) {
-    var conf = loadProgramConfigs([ program.conf ]);
-    var cli = new WunderCLI(conf);
-    var sel = new WunderSelector();
-    cli.sync()
-      .then(function(cli) { return sel.selectRenameLists(cli, { 'lists': lists }); })
-      .then(function(ols) { return sel.inputRenameTitles(ols, options.titles); })
-      .then(function(obj) { return cli.renameLists(obj.lists, obj.titles); })
-      .then(function(res) { console.log(res.length + ' Lists Successfully Renamed'); })
-      .catch(function(err) { console.log('Failed: ' + err.message); });
-  });
+// program
+  // .command('rename-list [lists...]')
+  // .alias('rl')
+  // .description('Rename lists')
+  // .option('-t, --titles [title]', 'New titles in order', function(v, t) { t.push(v); return t; }, [])
+  // .action(function(lists, options) {
+    // var conf = loadProgramConfigs([ program.conf ]);
+    // var cli = new WunderCLI(conf);
+    // var sel = new WunderSelector();
+    // cli.sync()
+      // .then(function(cli) { return sel.selectRenameLists(cli, { 'lists': lists }); })
+      // .then(function(ols) { return sel.inputRenameTitles(ols, options.titles); })
+      // .then(function(obj) { return cli.renameLists(obj.lists, obj.titles); })
+      // .then(function(res) { console.log(res.length + ' Lists Successfully Renamed'); })
+      // .catch(function(err) { console.log('Failed: ' + err.message); });
+  // });
 
 // url: /tasks
 program
