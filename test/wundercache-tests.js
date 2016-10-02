@@ -170,6 +170,13 @@ describe('WunderCache', function() {
         .catch(function(err) { done(err); });
     });
   });
+	describe('syncWithCache in WunderCLI', function () {
+	  it('calling syncWithCache', function (done) {
+      var cli = new WunderCLI(conf);
+      cli.syncWithCache();
+      done();
+    });
+  });
 });
 
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai

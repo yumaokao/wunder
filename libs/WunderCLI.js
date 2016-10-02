@@ -5,6 +5,8 @@ var path = require('path');
 var Promise = require('bluebird');
 var WunderAPI = require('./models/WunderAPI');
 var WunderRoot = require('./models/WunderRoot');
+var mkdirp = require('mkdirp');
+Promise.promisifyAll(mkdirp);
 
 var WunderCLI = function(conf) {
   this.baseURL = conf.get('Auth').baseURL;
@@ -30,6 +32,25 @@ WunderCLI.prototype.root = function() {
       })
       .catch(function(resp) {
         reject(resp);
+      });
+  });
+};
+
+// recursively sync all end points from root with cache
+WunderCLI.prototype.syncWithCache = function() {
+  // console.log(this.useCache);
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    mkdirp.mkdirpAsync(self.cacheDir)
+      .then(function() { return self.root(); })
+      .then(function(root) {
+        resolve(self);
+        // return root.lists();
+      })
+      .then(function() { resolve(self); })
+      .catch(function(error) {
+        // console.log('Error: ' + error.message);
+        reject(error);
       });
   });
 };
