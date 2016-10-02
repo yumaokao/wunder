@@ -69,19 +69,9 @@ WunderCLI.prototype.sync = function() {
 
 // TODO: following should to merged into model
 // lists
-WunderCLI.prototype.newLists = function(titles) {
-  var root = this.wunderRoot;
-  return Promise.map(titles, function(t) { return root.newList(t); });
-};
-
 WunderCLI.prototype.renameLists = function(lists, titles) {
   // return Promise.all(lists.map(function(l, i) { return l.rename(titles[i]); }));
   return Promise.map(lists, function(l, i) { return l.rename(titles[i]); });
-};
-
-// tasks
-WunderCLI.prototype.updateTasks = function(tasks, updates) {
-  return Promise.map(tasks, function(t, i) { return t.update(updates[i]); });
 };
 
 module.exports = WunderCLI;

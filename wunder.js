@@ -68,7 +68,7 @@ program
     var conf = loadProgramConfigs([ program.conf ]);
     var cli = new WunderCLI(conf);
     cli.sync()
-      .then(function(cli) { return cli.newLists(titles); })
+      .then(function(cli) { return Promise.map(titles, function(t) { return cli.wunderRoot.newList(t); }); })
       .then(function(res) { console.log(res.length + ' Lists Successfully Created'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
   });
@@ -118,6 +118,28 @@ program
       .then(function(cli) { return sel.selectLists(cli, 'add new tasks', { 'lists': options.lists }); })
       .then(function(ls) { return Promise.map(ls, function(l) { return l.newTasks(titles); }); })
       .then(function(res) { console.log(res.length + ' Tasks Successfully Created'); })
+      .catch(function(err) { console.log('Failed: ' + err.message); });
+  });
+program
+  .command('update-task <updates...>')
+  .alias('ut')
+  .description('Update tasks')
+  .option('-l, --lists [lists]', 'Lists to select tasks', function(v, t) { t.push(v); return t; }, [])
+  .option('-t, --tasks [tasks]', 'Tasks to update', function(v, t) { t.push(v); return t; }, [])
+  .action(function(updates, options) {
+    var conf = loadProgramConfigs([ program.conf ]);
+    var cli = new WunderCLI(conf);
+    var sel = new WunderSelector();
+    cli.sync()
+      .then(function(cli) { return sel.selectLists(cli, 'to select tasks', { 'lists': options.lists }); })
+      .then(function(ls) { return sel.selectTasks(ls, 'update', { 'tasks': options.tasks }); })
+      .then(function(tsks) {
+        if (tsks.length !== updates.length)
+          return Promise.reject({ message: 'Please give same number of updates as selected tasks' });
+        var upds = updates.map(function(u) { return JSON.parse(u); });
+        return Promise.map(tsks, function(t, i) { return t.update(upds[i]); });
+      })
+      .then(function(res) { console.log(res.length + ' Tasks Successfully Updated'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
   });
 program
