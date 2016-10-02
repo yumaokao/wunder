@@ -170,6 +170,26 @@ describe('WunderCache', function() {
         .catch(function(err) { done(err); });
     });
   });
+	describe('uuid in WunderAPI', function () {
+	  it('should have some root uuid', function (done) {
+      var uuid0;
+      var uuid1;
+      var cli = new WunderCLI(conf);
+      cli.root()
+        .then(function(root) {
+          root.should.have.property('uuid');
+          uuid0 = root.uuid;
+          return cli.root();
+        })
+        .then(function(root) {
+          root.should.have.property('uuid');
+          uuid1 = root.uuid;
+          uuid1.should.be.equal(uuid0);
+          done();
+        })
+        .catch(function(err) { done(err); });
+    });
+  });
 	describe('syncWithCache in WunderCLI', function () {
 	  it('calling syncWithCache', function (done) {
       var cli = new WunderCLI(conf);

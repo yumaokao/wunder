@@ -2,6 +2,7 @@
 
 var rest = require('restler');
 var merge = require('merge');
+var crypto = require('crypto');
 var Promise = require('bluebird');
 
 var WunderAPI = function(obj, up) {
@@ -9,6 +10,7 @@ var WunderAPI = function(obj, up) {
   this.up = up;
   this.options = up.options;
   this.baseURL = up.baseURL;
+  this.uuid = crypto.createHash('sha256').update(JSON.stringify(obj)).digest('hex');
 }
 
 WunderAPI.prototype.fetchAs = function(aurl, target, newer) {
