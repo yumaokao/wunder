@@ -101,28 +101,12 @@ program
     var cli = new WunderCLI(conf);
     var sel = new WunderSelector();
     cli.sync()
-      .then(function(cli) { return sel.selectDeleteLists(cli, { 'lists': lists }); })
+      .then(function(cli) { return sel.selectLists(cli, 'delete', { 'lists': lists }); })
       .then(function(ls) { return sel.confirmDeleteLists(ls); })
       .then(function(ls) { return Promise.map(ls, function(l) { return l.delete(); }); })
       .then(function(res) { console.log(res.length + ' Lists Successfully Deleted'); })
       .catch(function(err) { console.log('Failed: ' + err.message); });
   });
-// program
-  // .command('rename-list [lists...]')
-  // .alias('rl')
-  // .description('Rename lists')
-  // .option('-t, --titles [title]', 'New titles in order', function(v, t) { t.push(v); return t; }, [])
-  // .action(function(lists, options) {
-    // var conf = loadProgramConfigs([ program.conf ]);
-    // var cli = new WunderCLI(conf);
-    // var sel = new WunderSelector();
-    // cli.sync()
-      // .then(function(cli) { return sel.selectRenameLists(cli, { 'lists': lists }); })
-      // .then(function(ols) { return sel.inputRenameTitles(ols, options.titles); })
-      // .then(function(obj) { return cli.renameLists(obj.lists, obj.titles); })
-      // .then(function(res) { console.log(res.length + ' Lists Successfully Renamed'); })
-      // .catch(function(err) { console.log('Failed: ' + err.message); });
-  // });
 
 // url: /tasks
 program

@@ -67,13 +67,6 @@ WunderCLI.prototype.sync = function() {
   });
 };
 
-// TODO: following should to merged into model
-// lists
-WunderCLI.prototype.renameLists = function(lists, titles) {
-  // return Promise.all(lists.map(function(l, i) { return l.rename(titles[i]); }));
-  return Promise.map(lists, function(l, i) { return l.rename(titles[i]); });
-};
-
 module.exports = WunderCLI;
 
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai

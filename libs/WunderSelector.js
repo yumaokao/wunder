@@ -17,31 +17,6 @@ WunderSelector.prototype.selectListLists = function(cli, filters) {
     return cli.wunderRoot.wunderLists;
   return this.selectLists(cli, 'list', filters);
 };
-WunderSelector.prototype.selectDeleteLists = function(cli, filters) {
-  return this.selectLists(cli, 'delete', filters);
-};
-// WunderSelector.prototype.selectRenameLists = function(cli, filters) {
-  // return this.selectLists(cli, 'rename', filters);
-// };
-WunderSelector.prototype.inputRenameTitles = function(lists, titles) {
-  var self = this;
-  return new Promise(function(resolve, reject) {
-    if (lists.length < titles.length)
-      reject({ message: 'Too few lists selected' });
-    var adds = lists.slice(titles.length, lists.length);
-    Promise.each(adds, function(a) {
-        return prompt.getAsync(self.schemaString('Which title to rename [' + a.obj.title + '] ?'))
-          .then(function(res) {
-            return titles.push(res.string); });
-      })
-      .then(function() {
-        if (lists.length !== titles.length)
-          reject({ message: 'Not enough titles to rename' })
-        resolve({ 'lists': lists, 'titles': titles });
-      })
-      .catch(function(err) { reject({ message: err }); });
-  });
-};
 WunderSelector.prototype.confirmDeleteLists = function(lists) {
   lists.forEach(function(l) {
     console.log(chalk.black.bgYellow('D') + ' ' +
