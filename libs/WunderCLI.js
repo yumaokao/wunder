@@ -9,6 +9,7 @@ var mkdirp = require('mkdirp');
 Promise.promisifyAll(mkdirp);
 
 var WunderCLI = function(conf) {
+  this.config = conf;
   this.baseURL = conf.get('Auth').baseURL;
   this.options = { headers: { 'X-Access-Token': conf.get('Auth').accessToken,
                               'X-Client-ID': conf.get('Auth').clientID,

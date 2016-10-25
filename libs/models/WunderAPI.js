@@ -4,12 +4,18 @@ var rest = require('restler');
 var merge = require('merge');
 var crypto = require('crypto');
 var Promise = require('bluebird');
+var path = require('path');
 
 var WunderAPI = function(obj, up) {
   this.obj = obj;
   this.up = up;
-  this.options = up.options;
+
+  this.config = up.config;
   this.baseURL = up.baseURL;
+  this.options = up.options;
+  this.cacheDir = up.cacheDir;
+  this.useCache = up.useCache;
+
   this.uuid = crypto.createHash('sha256').update(JSON.stringify(obj)).digest('hex');
 }
 
