@@ -8,9 +8,13 @@ var WunderList = require('./WunderList');
 var WunderRoot = function(obj, up) {
   WunderAPI.call(this, obj, up);
 
-  this.wunderLists = [];
+  // this.wunderLists = [];
 };
 util.inherits(WunderRoot, WunderAPI);
+
+WunderRoot.prototype.sync = function() {
+  return this.lists();
+};
 
 WunderRoot.prototype.lists = function() {
   var self = this;
@@ -20,8 +24,9 @@ WunderRoot.prototype.lists = function() {
         self.wunderLists = data.map(function(l) {
           return new WunderList(l, self); 
         });
-        resolve(self.wunderLists);
+        return Promise.map(self.wunderLists, function(l) { return l.sync(); });
       })
+      .then(function() { resolve(self.wunderLists); })
       .catch(function(resp) {
         reject(resp);
       });

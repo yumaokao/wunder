@@ -27,8 +27,9 @@ WunderCLI.prototype.root = function() {
     self.get('/root')
       .then(function(data) {
         self.wunderRoot = new WunderRoot(data, self);
-        resolve(self.wunderRoot);
+        return self.wunderRoot.sync();
       })
+      .then(function() { resolve(self.wunderRoot); })
       .catch(function(resp) {
         reject(resp);
       });
@@ -59,7 +60,7 @@ WunderCLI.prototype.sync = function() {
   var self = this;
   return new Promise(function(resolve, reject) {
     self.root()
-      .then(function(root) { return root.lists(); })
+      /* .then(function(root) { return root.lists(); })
       .then(function(lists) {
         return Promise.map(lists, function(l) { return l.tasks(); });
       })
@@ -82,8 +83,8 @@ WunderCLI.prototype.sync = function() {
         var tasks = [].concat.apply([], self.wunderRoot.wunderLists.map(function(l) { return l.wunderTasks; }));
         var proms = [].concat.apply([], tasks.map(function(t) { return t.reminders(); }));
         return Promise.all(proms);
-      })
-      .then(function() {
+      }) */
+      .then(function(root) {
         resolve(self);
       })
       .catch(function(error) {

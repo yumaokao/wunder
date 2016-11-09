@@ -8,13 +8,18 @@ var WunderTask = require('./WunderTask');
 var WunderList = function(obj, up) {
   WunderAPI.call(this, obj, up);
 
-  this.wunderTasks = [];
+  // this.wunderTasks = [];
+
   // this.wunderSubtasks = [];
   // this.wunderComments = [];
   // this.wunderNotes = [];
   // this.wunderReminders = [];
 };
 util.inherits(WunderList, WunderAPI);
+
+WunderList.prototype.sync = function() {
+  return this.tasks();
+};
 
 WunderList.prototype.tasks = function() {
   return this.fetchAs('/tasks?list_id=' + this.obj.id,
