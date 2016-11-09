@@ -18,6 +18,11 @@ var WunderTask = function(obj, up) {
 };
 util.inherits(WunderTask, WunderAPI);
 
+WunderTask.prototype.sync = function() {
+  // TODO: complete it and enable for wundercli-subtasks-tests
+  return true;
+};
+
 WunderTask.prototype.subtasks = function() {
   return this.fetchAs('/subtasks?task_id=' + this.obj.id,
                       'wunderSubtasks', WunderSubtask);
@@ -47,6 +52,15 @@ WunderTask.prototype.update = function(updater) {
   var data = updater;
   data['revision'] = this.obj.revision;
   return this.patch('/tasks/' + this.obj.id, data);
+};
+
+WunderTask.prototype.newSubtask = function(title) {
+  return this.post('/subtasks', { 'title': title, 'task_id': this.obj.id });
+};
+
+WunderTask.prototype.newSubtasks = function(titles) {
+  var self = this;
+  return Promise.map(titles, function(t) { return self.newSubtask(t); });
 };
 
 module.exports = WunderTask;

@@ -13,7 +13,17 @@ var WunderRoot = function(obj, up) {
 util.inherits(WunderRoot, WunderAPI);
 
 WunderRoot.prototype.sync = function() {
-  return this.lists();
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    self.lists()
+      .then(function(lists) {
+        return Promise.map(lists, function(l) { return l.sync(); });
+      })
+      .then(function() { resolve(self); })
+      .catch(function(resp) {
+        reject(resp);
+      });
+  });
 };
 
 WunderRoot.prototype.lists = function() {
@@ -24,7 +34,6 @@ WunderRoot.prototype.lists = function() {
         self.wunderLists = data.map(function(l) {
           return new WunderList(l, self); 
         });
-        return Promise.map(self.wunderLists, function(l) { return l.sync(); });
       })
       .then(function() { resolve(self.wunderLists); })
       .catch(function(resp) {

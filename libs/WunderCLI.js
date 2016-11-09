@@ -17,7 +17,6 @@ var WunderCLI = function(conf) {
   this.cacheDir = conf.get('Cache').cacheDir ||
     path.join(process.env.HOME, '/.cache/wunder', conf.get('Auth').clientID);
   this.useCache = conf.get('Cache').useCache;
-  // this.root = new WunderRoot(null, this);
 };
 util.inherits(WunderCLI, WunderAPI);
 
@@ -25,10 +24,7 @@ WunderCLI.prototype.root = function() {
   var self = this;
   return new Promise(function(resolve, reject) {
     self.get('/root')
-      .then(function(data) {
-        self.wunderRoot = new WunderRoot(data, self);
-        return self.wunderRoot.sync();
-      })
+      .then(function(data) { return self.wunderRoot = new WunderRoot(data, self); })
       .then(function() { resolve(self.wunderRoot); })
       .catch(function(resp) {
         reject(resp);
@@ -84,7 +80,8 @@ WunderCLI.prototype.sync = function() {
         var proms = [].concat.apply([], tasks.map(function(t) { return t.reminders(); }));
         return Promise.all(proms);
       }) */
-      .then(function(root) {
+      .then(function(root) { return root.sync(); })
+      .then(function() {
         resolve(self);
       })
       .catch(function(error) {

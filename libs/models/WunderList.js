@@ -18,7 +18,18 @@ var WunderList = function(obj, up) {
 util.inherits(WunderList, WunderAPI);
 
 WunderList.prototype.sync = function() {
-  return this.tasks();
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    self.tasks()
+      .then(function(tasks) {
+        return Promise.map(tasks, function(t) { return t.sync(); });
+      })
+      .then(function() { resolve(self); })
+      .catch(function(resp) {
+        reject(resp);
+      });
+  });
+  // return this.tasks();
 };
 
 WunderList.prototype.tasks = function() {

@@ -64,11 +64,39 @@ describe('WunderCLI-SubTasks', function() {
         .then(function(lists) {
           var wls = lists.filter(function(l) { return l.obj.title === 'list test'; });
           wls.length.should.be.equal(1);
-          return wls[0].newTasks(['task test']);
+          return wls[0].wunderTasks;
+        })
+        .then(function(tasks) {
+          tasks.length.should.be.equal(1);
+          tasks[0].obj.title.should.be.equal('task test');
+          var wtsks = tasks.filter(function(t) { return t.obj.title === 'task test'; });
+          wtsks.length.should.be.equal(1);
+          return tasks[0].newSubtasks(['subtask test']);
         })
         .then(function(res) {
           res.length.should.be.equal(1);
-          res[0].title.should.be.equal('task test');
+          res[0].title.should.be.equal('subtask test');
+          done();
+        })
+        .catch(function(err) { done(err); });
+    });
+
+    it('Read subtask [subtask test] at task [task test]', function (done) {
+      cli.sync()
+        .then(function(cli) { return cli.wunderRoot.wunderLists; })
+        .then(function(lists) {
+          var wls = lists.filter(function(l) { return l.obj.title === 'list test'; });
+          wls.length.should.be.equal(1);
+          return wls[0].wunderTasks;
+        })
+        .then(function(tasks) {
+          tasks.length.should.be.equal(1);
+          tasks[0].obj.title.should.be.equal('task test');
+          return tasks[0].wunderSubtasks;
+        })
+        .then(function(subtasks) {
+          subtasks.length.should.be.equal(1);
+          subtasks[0].obj.title.should.be.equal('subtask test');
           done();
         })
         .catch(function(err) { done(err); });
@@ -112,6 +140,30 @@ describe('WunderCLI-SubTasks', function() {
         .then(function(res) {
           res.length.should.be.equal(1);
           res[0].title.should.be.equal('task rename');
+          done();
+        })
+        .catch(function(err) { done(err); });
+    }); */
+    /* it('Delete subtask [subtask test] at task [task test]', function (done) {
+      cli.sync()
+        .then(function(cli) { return cli.wunderRoot.wunderLists; })
+        .then(function(lists) {
+          var wls = lists.filter(function(l) { return l.obj.title === 'list test'; });
+          wls.length.should.be.equal(1);
+          return wls[0].wunderTasks;
+        })
+        .then(function(tasks) {
+          var wtsks = tasks.filter(function(t) { return t.obj.title === 'task test'; });
+          wtsks.length.should.be.equal(1);
+          return wtsks[0].wunderSubtasks;
+        })
+        .then(function(subtasks) {
+          var wstsks = subtasks.filter(function(s) { return s.obj.title === 'subtask test'; });
+          wstsks.length.should.be.equal(1);
+          return Promise.map(wstsks, function(s) { return s.delete(); });
+        })
+        .then(function(res) {
+          res.length.should.be.equal(1);
           done();
         })
         .catch(function(err) { done(err); });
