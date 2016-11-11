@@ -5,6 +5,7 @@ var WunderAPI = require('./WunderAPI');
 
 var WunderComment = function(obj, up) {
   WunderAPI.call(this, obj, up);
+  this.node = '/task_comments/';
 };
 util.inherits(WunderComment, WunderAPI);
 

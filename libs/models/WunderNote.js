@@ -5,6 +5,7 @@ var WunderAPI = require('./WunderAPI');
 
 var WunderNote = function(obj, up) {
   WunderAPI.call(this, obj, up);
+  this.node = '/notes/';
 };
 util.inherits(WunderNote, WunderAPI);
 

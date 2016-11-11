@@ -71,11 +71,11 @@ describe('WunderCLI-Comments', function() {
           tasks[0].obj.title.should.be.equal('task test');
           var wtsks = tasks.filter(function(t) { return t.obj.title === 'task test'; });
           wtsks.length.should.be.equal(1);
-          return tasks[0].newSubtasks(['comment test']);
+          return tasks[0].newComments(['comment test']);
         })
         .then(function(res) {
           res.length.should.be.equal(1);
-          res[0].title.should.be.equal('comment test');
+          res[0].text.should.be.equal('comment test');
           done();
         })
         .catch(function(err) { done(err); });
@@ -92,11 +92,11 @@ describe('WunderCLI-Comments', function() {
         .then(function(tasks) {
           tasks.length.should.be.equal(1);
           tasks[0].obj.title.should.be.equal('task test');
-          return tasks[0].wunderSubtasks;
+          return tasks[0].wunderComments;
         })
         .then(function(comments) {
           comments.length.should.be.equal(1);
-          comments[0].obj.title.should.be.equal('comment test');
+          comments[0].obj.text.should.be.equal('comment test');
           done();
         })
         .catch(function(err) { done(err); });
@@ -112,22 +112,25 @@ describe('WunderCLI-Comments', function() {
         .then(function(tasks) {
           var wtsks = tasks.filter(function(t) { return t.obj.title === 'task test'; });
           wtsks.length.should.be.equal(1);
-          return wtsks[0].wunderSubtasks;
+          return wtsks[0].wunderComments;
         })
         .then(function(comments) {
-          var wstsks = comments.filter(function(s) { return s.obj.title === 'comment test'; });
+          var wstsks = comments.filter(function(s) { return s.obj.text === 'comment test'; });
           wstsks.length.should.be.equal(1);
-          var updates = [ { 'title': 'comment rename' } ];
+          var updates = [ { 'text': 'comment rename' } ];
           return Promise.map(wstsks, function(t, i) { return t.update(updates[i]); });
         })
         .then(function(res) {
-          res.length.should.be.equal(1);
-          res[0].title.should.be.equal('comment rename');
+          res.should.be.equal(0);
           done();
         })
-        .catch(function(err) { done(err); });
+        .catch(function(err) {
+          /* Could not update task_comments */
+          err.should.have.property('code').to.be.equal(404);
+          done();
+        });
     });
-    it('Delete comment [comment rename] at task [task test]', function (done) {
+    it('Delete comment [comment test] at task [task test]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
@@ -138,10 +141,10 @@ describe('WunderCLI-Comments', function() {
         .then(function(tasks) {
           var wtsks = tasks.filter(function(t) { return t.obj.title === 'task test'; });
           wtsks.length.should.be.equal(1);
-          return wtsks[0].wunderSubtasks;
+          return wtsks[0].wunderComments;
         })
         .then(function(comments) {
-          var wstsks = comments.filter(function(s) { return s.obj.title === 'comment rename'; });
+          var wstsks = comments.filter(function(s) { return s.obj.text === 'comment test'; });
           wstsks.length.should.be.equal(1);
           return Promise.map(wstsks, function(s) { return s.delete(); });
         })

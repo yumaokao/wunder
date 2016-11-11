@@ -15,8 +15,8 @@ var WunderTask = function(obj, up) {
 
   // this.wunderSubtasks = [];
   // this.wunderComments = [];
-  this.wunderNotes = [];
-  this.wunderReminders = [];
+  // this.wunderNotes = [];
+  // this.wunderReminders = [];
 };
 util.inherits(WunderTask, WunderAPI);
 
@@ -30,6 +30,14 @@ WunderTask.prototype.sync = function() {
       .then(function() { return self.comments(); })
       .then(function(comms) {
         return Promise.map(comms, function(c) { return c.sync(); });
+      })
+      .then(function() { return self.notes(); })
+      .then(function(nts) {
+        return Promise.map(nts, function(n) { return n.sync(); });
+      })
+      .then(function() { return self.reminders(); })
+      .then(function(rmds) {
+        return Promise.map(rmds, function(r) { return r.sync(); });
       })
       .then(function() { resolve(self); })
       .catch(function(resp) {
@@ -73,7 +81,25 @@ WunderTask.prototype.newComment= function(text) {
 
 WunderTask.prototype.newComments = function(texts) {
   var self = this;
-  return Promise.map(titles, function(t) { return self.newComment(t); });
+  return Promise.map(texts, function(t) { return self.newComment(t); });
+};
+
+WunderTask.prototype.newNote = function(content) {
+  return this.post('/notes', { 'content': content, 'task_id': this.obj.id });
+};
+
+WunderTask.prototype.newNotes = function(contents) {
+  var self = this;
+  return Promise.map(contents, function(c) { return self.newNote(c); });
+};
+
+WunderTask.prototype.newReminder = function(date) {
+  return this.post('/reminders', { 'date': date, 'task_id': this.obj.id });
+};
+
+WunderTask.prototype.newReminders = function(dates) {
+  var self = this;
+  return Promise.map(dates, function(d) { return self.newReminder(d); });
 };
 
 module.exports = WunderTask;
