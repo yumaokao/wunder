@@ -9,7 +9,7 @@ var WunderSubtask = function(obj, up) {
 util.inherits(WunderSubtask, WunderAPI);
 
 WunderSubtask.prototype.delete = function() {
-  return this.del('/subtask/' + this.obj.id + '?revision=' + this.obj.revision);
+  return this.del('/subtasks/' + this.obj.id + '?revision=' + this.obj.revision);
 };
 
 module.exports = WunderSubtask;

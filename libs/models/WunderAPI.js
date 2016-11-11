@@ -19,6 +19,11 @@ var WunderAPI = function(obj, up) {
   this.uuid = crypto.createHash('sha256').update(JSON.stringify(obj)).digest('hex');
 }
 
+WunderAPI.prototype.sync = function() {
+  // default do nothing but return self
+  return this;
+}
+
 WunderAPI.prototype.fetchAs = function(aurl, target, newer) {
   var self = this;
 

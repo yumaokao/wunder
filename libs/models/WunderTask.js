@@ -19,8 +19,17 @@ var WunderTask = function(obj, up) {
 util.inherits(WunderTask, WunderAPI);
 
 WunderTask.prototype.sync = function() {
-  // TODO: complete it and enable for wundercli-subtasks-tests
-  return true;
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    self.subtasks()
+      .then(function(stasks) {
+        return Promise.map(stasks, function(s) { return s.sync(); });
+      })
+      .then(function() { resolve(self); })
+      .catch(function(resp) {
+        reject(resp);
+      });
+  });
 };
 
 WunderTask.prototype.subtasks = function() {

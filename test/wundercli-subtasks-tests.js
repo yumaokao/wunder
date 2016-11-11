@@ -58,7 +58,7 @@ describe('WunderCLI-SubTasks', function() {
         })
         .catch(function(err) { done(err); });
     });
-    /* it('Create subtask [subtask test] at task [task test]', function (done) {
+    it('Create subtask [subtask test] at task [task test]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
@@ -100,7 +100,7 @@ describe('WunderCLI-SubTasks', function() {
           done();
         })
         .catch(function(err) { done(err); });
-    }); */
+    });
     /* it('Read task [task test] at list [wunder test]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
@@ -144,7 +144,7 @@ describe('WunderCLI-SubTasks', function() {
         })
         .catch(function(err) { done(err); });
     }); */
-    /* it('Delete subtask [subtask test] at task [task test]', function (done) {
+    it('Delete subtask [subtask test] at task [task test]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
@@ -167,7 +167,7 @@ describe('WunderCLI-SubTasks', function() {
           done();
         })
         .catch(function(err) { done(err); });
-    }); */
+    });
     it('Delete task [task test] at list [list test]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
