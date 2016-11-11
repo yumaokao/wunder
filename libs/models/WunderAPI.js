@@ -24,6 +24,17 @@ WunderAPI.prototype.sync = function() {
   return this;
 }
 
+WunderAPI.prototype.delete = function() {
+  return this.del(this.node + this.obj.id + '?revision=' + this.obj.revision);
+};
+
+WunderAPI.prototype.update = function(updater) {
+  // TODO: check keys in updater ?
+  var data = updater;
+  data['revision'] = this.obj.revision;
+  return this.patch(this.node + this.obj.id, data);
+};
+
 WunderAPI.prototype.fetchAs = function(aurl, target, newer) {
   var self = this;
 

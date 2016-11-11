@@ -7,6 +7,7 @@ var WunderTask = require('./WunderTask');
 
 var WunderList = function(obj, up) {
   WunderAPI.call(this, obj, up);
+  this.node = '/lists/';
 
   // this.wunderTasks = [];
 
@@ -29,23 +30,11 @@ WunderList.prototype.sync = function() {
         reject(resp);
       });
   });
-  // return this.tasks();
 };
 
 WunderList.prototype.tasks = function() {
   return this.fetchAs('/tasks?list_id=' + this.obj.id,
                       'wunderTasks', WunderTask);
-};
-
-WunderList.prototype.delete = function() {
-  return this.del('/lists/' + this.obj.id + '?revision=' + this.obj.revision);
-};
-
-WunderList.prototype.update = function(updater) {
-  // TODO: check keys in updater ?
-  var data = updater;
-  data['revision'] = this.obj.revision;
-  return this.patch('/lists/' + this.obj.id, data);
 };
 
 WunderList.prototype.newTask = function(title) {

@@ -17,6 +17,8 @@ var WunderCLI = function(conf) {
   this.cacheDir = conf.get('Cache').cacheDir ||
     path.join(process.env.HOME, '/.cache/wunder', conf.get('Auth').clientID);
   this.useCache = conf.get('Cache').useCache;
+
+  this.node = '/CLI/';
 };
 util.inherits(WunderCLI, WunderAPI);
 

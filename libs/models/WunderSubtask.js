@@ -5,19 +5,9 @@ var WunderAPI = require('./WunderAPI');
 
 var WunderSubtask = function(obj, up) {
   WunderAPI.call(this, obj, up);
+  this.node = '/subtasks/';
 };
 util.inherits(WunderSubtask, WunderAPI);
-
-WunderSubtask.prototype.delete = function() {
-  return this.del('/subtasks/' + this.obj.id + '?revision=' + this.obj.revision);
-};
-
-WunderSubtask.prototype.update = function(updater) {
-  // TODO: check keys in updater ?
-  var data = updater;
-  data['revision'] = this.obj.revision;
-  return this.patch('/subtasks/' + this.obj.id, data);
-};
 
 module.exports = WunderSubtask;
 

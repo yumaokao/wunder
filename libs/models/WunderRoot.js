@@ -7,6 +7,7 @@ var WunderList = require('./WunderList');
 
 var WunderRoot = function(obj, up) {
   WunderAPI.call(this, obj, up);
+  this.node = '/root/';
 
   // this.wunderLists = [];
 };

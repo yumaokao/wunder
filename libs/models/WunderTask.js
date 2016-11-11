@@ -11,6 +11,8 @@ var WunderReminder = require('./WunderReminder');
 var WunderTask = function(obj, up) {
   WunderAPI.call(this, obj, up);
 
+  this.node = '/tasks/';
+
   this.wunderSubtasks = [];
   this.wunderComments = [];
   this.wunderNotes = [];
@@ -50,17 +52,6 @@ WunderTask.prototype.notes = function() {
 WunderTask.prototype.reminders = function() {
   return this.fetchAs('/reminders?task_id=' + this.obj.id,
                       'wunderReminders', WunderReminder);
-};
-
-WunderTask.prototype.delete = function() {
-  return this.del('/tasks/' + this.obj.id + '?revision=' + this.obj.revision);
-};
-
-WunderTask.prototype.update = function(updater) {
-  // TODO: check keys in updater ?
-  var data = updater;
-  data['revision'] = this.obj.revision;
-  return this.patch('/tasks/' + this.obj.id, data);
 };
 
 WunderTask.prototype.newSubtask = function(title) {
