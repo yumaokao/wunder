@@ -13,8 +13,8 @@ var WunderTask = function(obj, up) {
 
   this.node = '/tasks/';
 
-  this.wunderSubtasks = [];
-  this.wunderComments = [];
+  // this.wunderSubtasks = [];
+  // this.wunderComments = [];
   this.wunderNotes = [];
   this.wunderReminders = [];
 };
@@ -26,6 +26,10 @@ WunderTask.prototype.sync = function() {
     self.subtasks()
       .then(function(stasks) {
         return Promise.map(stasks, function(s) { return s.sync(); });
+      })
+      .then(function() { return self.comments(); })
+      .then(function(comms) {
+        return Promise.map(comms, function(c) { return c.sync(); });
       })
       .then(function() { resolve(self); })
       .catch(function(resp) {
@@ -61,6 +65,15 @@ WunderTask.prototype.newSubtask = function(title) {
 WunderTask.prototype.newSubtasks = function(titles) {
   var self = this;
   return Promise.map(titles, function(t) { return self.newSubtask(t); });
+};
+
+WunderTask.prototype.newComment= function(text) {
+  return this.post('/task_comments', { 'text': text, 'task_id': this.obj.id });
+};
+
+WunderTask.prototype.newComments = function(texts) {
+  var self = this;
+  return Promise.map(titles, function(t) { return self.newComment(t); });
 };
 
 module.exports = WunderTask;
