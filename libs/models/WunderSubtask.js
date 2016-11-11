@@ -12,6 +12,13 @@ WunderSubtask.prototype.delete = function() {
   return this.del('/subtasks/' + this.obj.id + '?revision=' + this.obj.revision);
 };
 
+WunderSubtask.prototype.update = function(updater) {
+  // TODO: check keys in updater ?
+  var data = updater;
+  data['revision'] = this.obj.revision;
+  return this.patch('/subtasks/' + this.obj.id, data);
+};
+
 module.exports = WunderSubtask;
 
 // vim:fileencoding=UTF-8:ts=2:sw=2:sta:et:sts=2:ai

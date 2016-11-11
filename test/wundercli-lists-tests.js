@@ -71,7 +71,7 @@ describe('WunderCLI-Lists', function() {
         });
     });
   });
-	describe('CRUD /list with a single [wunder test]', function () {
+	describe('CRUD /lists with a single [wunder test]', function () {
     var cli = new WunderCLI(conf);
 	  it('If exists, Delete [wunder test] [wunder rename]', function (done) {
       cli.sync()

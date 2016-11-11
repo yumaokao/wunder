@@ -14,7 +14,7 @@ var conf = new WunderConfig();
 
 describe('WunderCLI-Tasks', function() {
   this.timeout(30000);
-	describe('CRUD /task in list [wunder test]', function () {
+	describe('CRUD /tasks in list [wunder test]', function () {
     var cli = new WunderCLI(conf);
 	  it('If exists, Delete [wunder test] [wunder rename]', function (done) {
       cli.sync()
@@ -91,7 +91,7 @@ describe('WunderCLI-Tasks', function() {
           return wtsks;
         })
         .then(function(tasks) {
-          var updates = [ { 'title': 'task rename'} ];
+          var updates = [ { 'title': 'task rename' } ];
           return Promise.map(tasks, function(t, i) { return t.update(updates[i]); });
         })
         .then(function(res) {

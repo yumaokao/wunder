@@ -14,7 +14,7 @@ var conf = new WunderConfig();
 
 describe('WunderCLI-SubTasks', function() {
   this.timeout(30000);
-	describe('CRUD /subtask in task [task test] in list [list test]', function () {
+	describe('CRUD /subtasks in task [task test] in list [list test]', function () {
     var cli = new WunderCLI(conf);
 	  it('If exists, Delete [list test]', function (done) {
       cli.sync()
@@ -101,50 +101,7 @@ describe('WunderCLI-SubTasks', function() {
         })
         .catch(function(err) { done(err); });
     });
-    /* it('Read task [task test] at list [wunder test]', function (done) {
-      cli.sync()
-        .then(function(cli) { return cli.wunderRoot.wunderLists; })
-        .then(function(lists) {
-          var wls = lists.filter(function(l) { return l.obj.title === 'wunder test'; });
-          wls.length.should.be.equal(1);
-          return wls[0].wunderTasks;
-        })
-        .then(function(tasks) {
-          tasks.length.should.be.equal(1);
-          tasks[0].obj.title.should.be.equal('task test');
-          var wtsks = tasks.filter(function(t) { return t.obj.title === 'task test'; });
-          wtsks.length.should.be.equal(1);
-          done();
-        })
-        .catch(function(err) { done(err); });
-    });
-    it('Update task [task test] -> [task rename]', function (done) {
-      cli.sync()
-        .then(function(cli) { return cli.wunderRoot.wunderLists; })
-        .then(function(lists) {
-          var wls = lists.filter(function(l) { return l.obj.title === 'list test'; });
-          wls.length.should.be.equal(1);
-          return wls[0].wunderTasks;
-        })
-        .then(function(tasks) {
-          tasks.length.should.be.equal(1);
-          tasks[0].obj.title.should.be.equal('task test');
-          var wtsks = tasks.filter(function(t) { return t.obj.title === 'task test'; });
-          wtsks.length.should.be.equal(1);
-          return wtsks;
-        })
-        .then(function(tasks) {
-          var updates = [ { 'title': 'task rename'} ];
-          return Promise.map(tasks, function(t, i) { return t.update(updates[i]); });
-        })
-        .then(function(res) {
-          res.length.should.be.equal(1);
-          res[0].title.should.be.equal('task rename');
-          done();
-        })
-        .catch(function(err) { done(err); });
-    }); */
-    it('Delete subtask [subtask test] at task [task test]', function (done) {
+    it('Update subtask [subtask test] -> [subtask rename]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
@@ -159,6 +116,32 @@ describe('WunderCLI-SubTasks', function() {
         })
         .then(function(subtasks) {
           var wstsks = subtasks.filter(function(s) { return s.obj.title === 'subtask test'; });
+          wstsks.length.should.be.equal(1);
+          var updates = [ { 'title': 'subtask rename' } ];
+          return Promise.map(wstsks, function(t, i) { return t.update(updates[i]); });
+        })
+        .then(function(res) {
+          res.length.should.be.equal(1);
+          res[0].title.should.be.equal('subtask rename');
+          done();
+        })
+        .catch(function(err) { done(err); });
+    });
+    it('Delete subtask [subtask rename] at task [task test]', function (done) {
+      cli.sync()
+        .then(function(cli) { return cli.wunderRoot.wunderLists; })
+        .then(function(lists) {
+          var wls = lists.filter(function(l) { return l.obj.title === 'list test'; });
+          wls.length.should.be.equal(1);
+          return wls[0].wunderTasks;
+        })
+        .then(function(tasks) {
+          var wtsks = tasks.filter(function(t) { return t.obj.title === 'task test'; });
+          wtsks.length.should.be.equal(1);
+          return wtsks[0].wunderSubtasks;
+        })
+        .then(function(subtasks) {
+          var wstsks = subtasks.filter(function(s) { return s.obj.title === 'subtask rename'; });
           wstsks.length.should.be.equal(1);
           return Promise.map(wstsks, function(s) { return s.delete(); });
         })
