@@ -12,9 +12,9 @@ var WunderSelector = require('../libs/WunderSelector');
 var WunderConfig = require('../libs/WunderConfig');
 var conf = new WunderConfig();
 
-describe('WunderCLI-Notes', function() {
+describe('WunderCLI-Reminders', function() {
   this.timeout(30000);
-	describe('CRUD /task_notes in task [task test] in list [list test]', function () {
+	describe('CRUD /task_reminders in task [task test] in list [list test]', function () {
     var cli = new WunderCLI(conf);
 	  it('If exists, Delete [list test]', function (done) {
       cli.sync()
@@ -58,7 +58,7 @@ describe('WunderCLI-Notes', function() {
         })
         .catch(function(err) { done(err); });
     });
-    it('Create note [note test] at task [task test]', function (done) {
+    it('Create reminder [reminder test] at task [task test]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
@@ -71,17 +71,17 @@ describe('WunderCLI-Notes', function() {
           tasks[0].obj.title.should.be.equal('task test');
           var wtsks = tasks.filter(function(t) { return t.obj.title === 'task test'; });
           wtsks.length.should.be.equal(1);
-          return tasks[0].newNotes(['note test']);
+          return tasks[0].newReminders(['2015-03-18T08:35:00.000Z']);
         })
         .then(function(res) {
           res.length.should.be.equal(1);
-          res[0].content.should.be.equal('note test');
+          res[0].date.should.be.equal('2015-03-18T08:35:00.000Z');
           done();
         })
         .catch(function(err) { done(err); });
     });
 
-    it('Read note [note test] at task [task test]', function (done) {
+    it('Read reminder [reminder test] at task [task test]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
@@ -92,16 +92,16 @@ describe('WunderCLI-Notes', function() {
         .then(function(tasks) {
           tasks.length.should.be.equal(1);
           tasks[0].obj.title.should.be.equal('task test');
-          return tasks[0].wunderNotes;
+          return tasks[0].wunderReminders;
         })
-        .then(function(notes) {
-          notes.length.should.be.equal(1);
-          notes[0].obj.content.should.be.equal('note test');
+        .then(function(reminders) {
+          reminders.length.should.be.equal(1);
+          reminders[0].obj.date.should.be.equal('2015-03-18T08:35:00.000Z');
           done();
         })
         .catch(function(err) { done(err); });
     });
-    it('Update note [note test] -> [note rename]', function (done) {
+    it('Update reminders [reminder test] -> [reminder rename]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
@@ -112,22 +112,22 @@ describe('WunderCLI-Notes', function() {
         .then(function(tasks) {
           var wtsks = tasks.filter(function(t) { return t.obj.title === 'task test'; });
           wtsks.length.should.be.equal(1);
-          return wtsks[0].wunderNotes;
+          return wtsks[0].wunderReminders;
         })
-        .then(function(notes) {
-          var wstsks = notes.filter(function(s) { return s.obj.content === 'note test'; });
+        .then(function(reminders) {
+          var wstsks = reminders.filter(function(s) { return s.obj.date === '2015-03-18T08:35:00.000Z'; });
           wstsks.length.should.be.equal(1);
-          var updates = [ { 'content': 'note rename' } ];
+          var updates = [ { 'date': '2017-03-18T08:35:00.000Z' } ];
           return Promise.map(wstsks, function(t, i) { return t.update(updates[i]); });
         })
         .then(function(res) {
           res.length.should.be.equal(1);
-          res[0].content.should.be.equal('note rename');
+          res[0].date.should.be.equal('2017-03-18T08:35:00.000Z');
           done();
         })
         .catch(function(err) { done(err); });
     });
-    it('Delete note [note rename] at task [task test]', function (done) {
+    it('Delete reminders [reminder rename] at task [task test]', function (done) {
       cli.sync()
         .then(function(cli) { return cli.wunderRoot.wunderLists; })
         .then(function(lists) {
@@ -138,10 +138,10 @@ describe('WunderCLI-Notes', function() {
         .then(function(tasks) {
           var wtsks = tasks.filter(function(t) { return t.obj.title === 'task test'; });
           wtsks.length.should.be.equal(1);
-          return wtsks[0].wunderNotes;
+          return wtsks[0].wunderReminders;
         })
-        .then(function(notes) {
-          var wstsks = notes.filter(function(s) { return s.obj.content === 'note rename'; });
+        .then(function(reminders) {
+          var wstsks = reminders.filter(function(s) { return s.obj.date === '2017-03-18T08:35:00.000Z'; });
           wstsks.length.should.be.equal(1);
           return Promise.map(wstsks, function(s) { return s.delete(); });
         })
