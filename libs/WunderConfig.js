@@ -48,7 +48,11 @@ var WunderConfig = function(paths) {
 };
 
 WunderConfig.prototype.get = function(param) {
-  return this.conf.get(param)
+  return this.conf.get(param);
+};
+
+WunderConfig.prototype.set = function(param, value) {
+  return this.conf.set(param, value);
 };
 
 WunderConfig.prototype.validate = function(param) {

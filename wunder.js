@@ -13,10 +13,11 @@ var WunderSelector = require('./libs/WunderSelector');
 var WunderConfig = require('./libs/WunderConfig');
 
 
-var loadProgramConfigs = function(paths) {
+var loadProgramConfigs = function(args) {
   var configPaths = [ path.join(process.env.PWD, '/.config/', pkg.name + '.json'),
                       path.join(process.env.HOME, '/.config/', pkg.name + '.json') ];
-  paths = paths.filter(function(p) { return p !== undefined; });
+  var paths;
+  paths = args.conf.filter(function(p) { return p !== undefined; });
   paths = paths.map(function(p) { return path.join(p, pkg.name + '.json'); });
   var conf;
   try {
@@ -25,13 +26,23 @@ var loadProgramConfigs = function(paths) {
     console.log('Failed: Configuration ' + error);
     process.exit();
   }
+
+  // from args explicitily
+  if (args.useCache !== undefined)
+     conf.set('Cache.useCache', args.useCache);
   return conf;
 };
+
+function collect(val, memo) {
+    memo.push(val);
+    return memo;
+}
 
 
 program
   .version(pkg.version)
-  .option('-c, --conf <dir>', 'Specific another configuration directory');
+  .option('-c, --conf <dir>', 'Specific another configuration directory', collect, [])
+  .option('--use-cache', 'Use cache explicitily');
 
 // [auth]
 program
@@ -49,7 +60,7 @@ program
   .alias('ls')
   .description('List all lists and tasks with filters')
   .action(function(lists) {
-    var conf = loadProgramConfigs([ program.conf ]);
+    var conf = loadProgramConfigs(program);
     var cli = new WunderCLI(conf);
     var sel = new WunderSelector();
     var printer = new WunderPrinter();
@@ -65,7 +76,7 @@ program
   .alias('nl')
   .description('New lists')
   .action(function(titles) {
-    var conf = loadProgramConfigs([ program.conf ]);
+    var conf = loadProgramConfigs(program);
     var cli = new WunderCLI(conf);
     cli.sync()
       .then(function(cli) { return cli.wunderRoot.newLists(titles); })
@@ -78,7 +89,7 @@ program
   .description('Update lists')
   .option('-l, --lists [lists]', 'Lists to update', function(v, t) { t.push(v); return t; }, [])
   .action(function(updates, options) {
-    var conf = loadProgramConfigs([ program.conf ]);
+    var conf = loadProgramConfigs(program);
     var cli = new WunderCLI(conf);
     var sel = new WunderSelector();
     cli.sync()
@@ -97,7 +108,7 @@ program
   .alias('dl')
   .description('Delete lists')
   .action(function(lists) {
-    var conf = loadProgramConfigs([ program.conf ]);
+    var conf = loadProgramConfigs(program);
     var cli = new WunderCLI(conf);
     var sel = new WunderSelector();
     cli.sync()
@@ -115,7 +126,7 @@ program
   .description('New tasks')
   .option('-l, --lists [lists]', 'Lists for newly tasks to place', function(v, t) { t.push(v); return t; }, [])
   .action(function(titles, options) {
-    var conf = loadProgramConfigs([ program.conf ]);
+    var conf = loadProgramConfigs(program);
     var cli = new WunderCLI(conf);
     var sel = new WunderSelector();
     cli.sync()
@@ -152,7 +163,7 @@ program
   .description('Delete tasks')
   .option('-l, --lists [lists]', 'Lists for newly tasks to place', function(v, t) { t.push(v); return t; }, [])
   .action(function(tasks, options) {
-    var conf = loadProgramConfigs([ program.conf ]);
+    var conf = loadProgramConfigs(program);
     var cli = new WunderCLI(conf);
     var sel = new WunderSelector();
     cli.sync()
@@ -175,7 +186,7 @@ program
 
 // default goes to lists
 if (!process.argv.slice(2).length) {
-    var conf = loadProgramConfigs([ program.conf ]);
+    var conf = loadProgramConfigs(program);
     var cli = new WunderCLI(conf);
     var printer = new WunderPrinter();
     cli.sync()
