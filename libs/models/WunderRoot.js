@@ -16,10 +16,19 @@ util.inherits(WunderRoot, WunderAPI);
 WunderRoot.prototype.sync = function() {
   var self = this;
   return new Promise(function(resolve, reject) {
-    self.lists()
+    self.getCache()
+      .then(function(cache) {
+        // console.log('get the cache');
+        return self.lists();
+      })
+      .catch(function(resp) {
+        // console.log('no cache: ' + resp.message);
+        return self.lists();
+      })
       .then(function(lists) {
         return Promise.map(lists, function(l) { return l.sync(); });
       })
+      .then(function() { return self.saveCache(); })
       .then(function() { resolve(self); })
       .catch(function(resp) {
         reject(resp);

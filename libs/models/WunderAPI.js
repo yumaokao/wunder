@@ -5,6 +5,10 @@ var merge = require('merge');
 var crypto = require('crypto');
 var Promise = require('bluebird');
 var path = require('path');
+var fs = require('fs');
+Promise.promisifyAll(fs);
+var mkdirp = require('mkdirp');
+Promise.promisifyAll(mkdirp);
 
 var WunderAPI = function(obj, up) {
   this.obj = obj;
@@ -23,6 +27,51 @@ WunderAPI.prototype.sync = function() {
   // default do nothing but return self
   return this;
 }
+
+WunderAPI.prototype.getCache = function() {
+  // console.log(this.cacheDir);
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    if (!self.useCache) {
+      reject({ message: 'not using cache' });
+    } else {
+      fs.accessAsync(self.cacheDir)
+        .then(function(err) { resolve(true); })
+        .catch(function(resp) {
+          // console.log(resp);
+          reject({ message: 'no cache saved' });
+        });
+    }
+  });
+};
+
+WunderAPI.prototype.saveCache = function() {
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    if (self.useCache) {
+      fs.accessAsync(self.cacheDir)
+        .then(function(err) { resolve(true); })
+        .catch({ code: 'ENOENT' }, function(resp) {
+          console.log(resp);
+          return mkdirp.mkdirpAsync(self.cacheDir)
+        })
+        .then(function() {
+          var cacheObj = {
+            obj: self.obj,
+            lists: self.wunderLists.map(function(l) { return l.obj; })
+          };
+          return fs.writeFileAsync(path.join(self.cacheDir, self.uuid),
+            JSON.stringify(cacheObj));
+        })
+        .then(function() {
+          resolve(true);
+        })
+        .catch(function(resp) { resolve(false); });
+    } else {
+      resolve(false);
+    }
+  });
+};
 
 WunderAPI.prototype.delete = function() {
   return this.del(this.node + this.obj.id + '?revision=' + this.obj.revision);
