@@ -19,7 +19,9 @@ WunderRoot.prototype.sync = function() {
     self.getCache()
       .then(function(cache) {
         // console.log('get the cache');
-        return self.lists();
+        return self.wunderLists = cache.lists.map(function(l) {
+          return new WunderList(l, self);
+        });
       })
       .catch(function(resp) {
         // console.log('no cache: ' + resp.message);
@@ -28,7 +30,13 @@ WunderRoot.prototype.sync = function() {
       .then(function(lists) {
         return Promise.map(lists, function(l) { return l.sync(); });
       })
-      .then(function() { return self.saveCache(); })
+      .then(function() {
+        var cacheObj = {
+          obj: self.obj,
+          lists: self.wunderLists.map(function(l) { return l.obj; })
+        };
+        return self.saveCache(cacheObj);
+      })
       .then(function() { resolve(self); })
       .catch(function(resp) {
         reject(resp);

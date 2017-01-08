@@ -29,37 +29,37 @@ WunderAPI.prototype.sync = function() {
 }
 
 WunderAPI.prototype.getCache = function() {
-  // console.log(this.cacheDir);
   var self = this;
   return new Promise(function(resolve, reject) {
     if (!self.useCache) {
       reject({ message: 'not using cache' });
     } else {
       fs.accessAsync(self.cacheDir)
-        .then(function(err) { resolve(true); })
+        .then(function() {
+          return fs.readFileAsync(path.join(self.cacheDir, self.uuid), 'utf8');
+        })
+        .then(JSON.parse)
+        .then(function(cache) {
+          resolve(cache);
+        })
         .catch(function(resp) {
-          // console.log(resp);
           reject({ message: 'no cache saved' });
         });
+
     }
   });
 };
 
-WunderAPI.prototype.saveCache = function() {
+WunderAPI.prototype.saveCache = function(cacheObj) {
   var self = this;
   return new Promise(function(resolve, reject) {
     if (self.useCache) {
       fs.accessAsync(self.cacheDir)
-        .then(function(err) { resolve(true); })
         .catch({ code: 'ENOENT' }, function(resp) {
-          console.log(resp);
+          // console.log(resp);
           return mkdirp.mkdirpAsync(self.cacheDir)
         })
         .then(function() {
-          var cacheObj = {
-            obj: self.obj,
-            lists: self.wunderLists.map(function(l) { return l.obj; })
-          };
           return fs.writeFileAsync(path.join(self.cacheDir, self.uuid),
             JSON.stringify(cacheObj));
         })
