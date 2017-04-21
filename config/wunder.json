@@ -1,0 +1,6 @@
+{
+  "Auth": {
+    "accessToken": "your_access_token",
+    "clientID": "your_client_id"
+  }
+}
